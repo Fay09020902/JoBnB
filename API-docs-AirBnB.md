@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-![Getting Started](Untitled%20(1).png)
+![Getting Started](schema.png)
 
 ## API Documentation
 
