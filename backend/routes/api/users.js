@@ -5,6 +5,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
+const e = require('express');
 
 const router = express.Router();
 
@@ -38,13 +39,39 @@ const validateSignup = [
 router.post(
     '/',
     validateSignup,
-    async (req, res) => {
+    async (req, res, next) => {
       const { email, firstName, lastName, password, username } = req.body;
       const hashedPassword = bcrypt.hashSync(password);
+      // Check if the user with the same email or username already exists
+      let existingUserWithUsername
+      let existingUserWithEmail
+      if(username) {
+        existingUserWithUsername = await User.unscoped().findOne({where: {username: username}});
+      }
+      if(email) {
+        existingUserWithEmail  = await User.unscoped().findOne({where: {email: email}})
+      }
+      if(existingUserWithUsername || existingUserWithEmail) {
+        //const error = new Error('User already exists');
+        //error.statusCode = 500;
+        const errors = {};
+        if (existingUserWithEmail) {
+          errors.email = 'User with that email already exists';
+        }
+
+        if (existingUserWithUsername) {
+          errors.username = 'User with that username already exists';
+        }
+
+        return res.status(400).json ({
+          message: 'User already exists',
+          errors,
+        })
+      }
 
       const user = await User.create({ email,firstName, lastName, username, hashedPassword });
 
-      
+
       const safeUser = {
         id: user.id,
         firstName: user.firstName,
