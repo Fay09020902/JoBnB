@@ -52,21 +52,18 @@ router.post(
         existingUserWithEmail  = await User.unscoped().findOne({where: {email: email}})
       }
       if(existingUserWithUsername || existingUserWithEmail) {
-        //const error = new Error('User already exists');
-        //error.statusCode = 500;
-        const errors = {};
+        const error = new Error('User already exists');
+        error.statusCode = 500;
+        error.errors = {};
         if (existingUserWithEmail) {
-          errors.email = 'User with that email already exists';
+          error.errors.email = 'User with that email already exists';
         }
 
         if (existingUserWithUsername) {
-          errors.username = 'User with that username already exists';
+          error.errors.username = 'User with that username already exists';
         }
 
-        return res.status(400).json ({
-          message: 'User already exists',
-          errors,
-        })
+        return next(error)
       }
 
       const user = await User.create({ email,firstName, lastName, username, hashedPassword });
