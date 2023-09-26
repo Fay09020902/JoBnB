@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await User.bulkCreate([
+    await Booking.bulkCreate([
     {"spotId": 1,
       "userId": 1,
       "startDate": "2024-11-24",
