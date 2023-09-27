@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Spot } = require('../../db/models');
+const { User, Spot, SpotImage } = require('../../db/models');
 const e = require('express');
 
 const router = express.Router();
@@ -46,23 +46,47 @@ const validateSignup = [
             min: 0,
           })
         .withMessage('Price per day is required'),
+    handleValidationErrors
 ];
 
 //Get all Spots
 router.get(
     "/",
-    validateSignup,
     async (req, res, next) => {
-        const spots = await Spot.findAll()
+        const spots = await Spot.findAll({
+            include:  {
+                model: SpotImage,
+                attributes: ["url", "preview"],
+            }
+        })
+
+        let previewImage;
+        const updatedSpots = spots.map(spot => {
+            //console.log(spot.toJSON())
+            const {SpotImages, ...rest} = spot.toJSON()
+            SpotImages.forEach(spotimage => {
+                if(spotimage.preview) {
+                    previewImage = spotimage.url
+                }
+                else {
+                    previewImage = null
+                }
+            })
+            return {
+                ...rest,
+                previewImage
+            }
+         })
+
         return res.json({
-            Spots: spots
+            Spots: updatedSpots
           });
     })
 //Create a Spot
 router.post(
     "/",
-    validateSignup,
     requireAuth,
+    validateSignup,
     async (req, res, next) => {
         const {user} = req;
         let { address, city, state, country, lat, lng, name, description, price } =
@@ -74,20 +98,45 @@ router.post(
     }
 );
 
+
 //Get all Spots owned by the Current User
 router.get(
     "/sessions",
-    validateSignup,
     requireAuth,
+    validateSignup,
     async (req, res, next) => {
-        ///console.log("req is ", req)
         const {user} = req
-        console.log("userid is", user.id)
+        //console.log("userid is", user.id)
         const spots = await Spot.findAll(
-            {where: {ownerId: user.id}}
+            {
+                where: {ownerId: user.id},
+                include:  {
+                    model: SpotImage,
+                    attributes: ["url", "preview"],
+                }
+            }
         )
+
+        let previewImage;
+        const updatedSpots = spots.map(spot => {
+            //console.log(spot.toJSON())
+            const {SpotImages, ...rest} = spot.toJSON()
+            SpotImages.forEach(spotimage => {
+                if(spotimage.preview) {
+                    previewImage = spotimage.url
+                }
+                else {
+                    previewImage = null
+                }
+            })
+            return {
+                ...rest,
+                previewImage
+            }
+         })
+
         return res.json({
-            Spots: spots
+            Spots: updatedSpots
           });
     });
 
@@ -100,6 +149,35 @@ router.get(
         const spot = await Spot.findByPk(spotId)
         return res.json(spot);
     });
+
+//Add an Image to a Spot based on the Spot's id
+//Create and return
+
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+    let { url, preview } = req.body;
+    const spotId = Number(req.params.spotId);
+    const { user } = req;
+    if (spotId !== user.id) {
+        const err = new Error("Forbidden");
+        err.status = 403;
+        return next(err);
+      }
+    const currSpot = await Spot.findByPk(spotId);
+    if (!currSpot) {
+        const err = new Error("Spot couldn't be found");
+        err.status = 404;
+        return next(err);
+      }
+    const newSpotImage = await currSpot.createSpotImage({url, preview});
+    //const spot = await SpotImage.findOne()
+    return res.json({
+        id: newSpotImage.id,
+        url: newSpotImage.url,
+        preview: newSpotImage.preview,
+      });
+  });
+
+//
 // router.delete("/:id", async (req, res, next) => {
 //     const treeToDelete = await User.findByPk(req.params.id);
 

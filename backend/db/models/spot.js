@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [1, 50], // Validation to ensure name length is between 1 and 50 characters
+        //len: [1, 50], // Validation to ensure name length is between 1 and 50 characters
         notEmpty: true, //cannot be empty string
       },
     },
