@@ -103,7 +103,6 @@ router.post(
 router.get(
     "/sessions",
     requireAuth,
-    validateSignup,
     async (req, res, next) => {
         const {user} = req
         //console.log("userid is", user.id)
