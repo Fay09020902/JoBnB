@@ -143,7 +143,6 @@ router.get(
 //Get details of a Spot from an id
 router.get(
     "/:spotId",
-    validateSignup,
     async (req, res, next) => {
         const {spotId} = req.params
         const spot = await Spot.findByPk(spotId)
@@ -157,11 +156,6 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     let { url, preview } = req.body;
     const spotId = Number(req.params.spotId);
     const { user } = req;
-    if (spotId !== user.id) {
-        const err = new Error("Forbidden");
-        err.status = 403;
-        return next(err);
-      }
     const currSpot = await Spot.findByPk(spotId);
     if (!currSpot) {
         const err = new Error("Spot couldn't be found");
