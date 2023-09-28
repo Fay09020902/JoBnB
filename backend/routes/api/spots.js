@@ -151,24 +151,53 @@ router.get(
 //Add an Image to a Spot based on the Spot's id
 //Create and return
 
-router.post("/:spotId/images", requireAuth, async (req, res, next) => {
-    let { url, preview } = req.body;
-    const spotId = Number(req.params.spotId);
-    const { user } = req;
-    const currSpot = await Spot.findByPk(spotId);
-    if (!currSpot) {
-        const err = new Error("Spot couldn't be found");
-        err.status = 404;
-        return next(err);
-      }
-    const newSpotImage = await currSpot.createSpotImage({url, preview});
-    //const spot = await SpotImage.findOne()
-    return res.json({
-        id: newSpotImage.id,
-        url: newSpotImage.url,
-        preview: newSpotImage.preview,
-      });
-  });
+router.post("/:spotId/images",
+            requireAuth,
+            async (req, res, next) => {
+                let { url, preview } = req.body;
+                const spotId = Number(req.params.spotId);
+                const { user } = req;
+                const currSpot = await Spot.findByPk(spotId);
+                if (!currSpot) {
+                    const err = new Error("Spot couldn't be found");
+                    err.status = 404;
+                    return next(err);
+                }
+                const newSpotImage = await currSpot.createSpotImage({url, preview});
+                //const spot = await SpotImage.findOne()
+                return res.json({
+                    id: newSpotImage.id,
+                    url: newSpotImage.url,
+                    preview: newSpotImage.preview,
+                });
+             });
+
+
+//edit a spot
+router.put(
+    "/:spotId",
+    requireAuth,
+    validateSignup,
+    async (req, res, next) => {
+        const {spotId} = req.params
+        const {user} = req
+        const spot = await Spot.findByPk(spotId)
+        if (!spot) {
+            const err = new Error("Spot couldn't be found");
+            err.status = 404;
+            return next(err);
+        }
+        //Only the owner of the spot is authorized to edit
+        if (spot.ownerId !== user.id) {
+            const err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+          }
+        const updatedSpot = await spot.update(req.body);
+        res.json(updatedSpot)
+    });
+
+
 
 //
 // router.delete("/:id", async (req, res, next) => {
