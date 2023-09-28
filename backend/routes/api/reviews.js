@@ -119,6 +119,52 @@ router.post("/:reviewId/images",
         }
       );
 
+//edit a review
+router.put(
+    "/:reviewId",
+    requireAuth,
+    validateReviews,
+    async (req, res, next) => {
+        const {reviewId} = req.params
+        const {user} = req
+        const review = await Review.findByPk(reviewId)
+        if (!review) {
+            const err = new Error("Review couldn't be found");
+            err.status = 404;
+            return next(err);
+        }
+        //Only the owner of the review is authorized to edit
+        if (review.userId !== user.id) {
+            const err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+          }
+        const updatedReview = await review.update(req.body);
+        return res.json(updatedReview)
+    });
 
-
+//delete a review
+router.delete(
+    "/:reviewId",
+    requireAuth,
+    async (req, res, next) => {
+        const {reviewId} = req.params
+        const {user} = req
+        const review = await Review.findByPk(reviewId)
+        if (!review) {
+            const err = new Error("Spot couldn't be found");
+            err.status = 404;
+            return next(err);
+        }
+        //Only the owner of the review is authorized to edit
+        if (review.userId !== user.id) {
+            const err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+          }
+        await review.destroy();
+        return res.json({
+            "message": "Successfully deleted"
+          })
+    })
 module.exports = router;
