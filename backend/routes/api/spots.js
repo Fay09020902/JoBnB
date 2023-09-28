@@ -132,16 +132,20 @@ router.get(
 
         let previewImage;
         const updatedSpots = spots.map(spot => {
-            //console.log(spot.toJSON())
             const {SpotImages, ...rest} = spot.toJSON()
-            SpotImages.forEach(spotimage => {
-                if(spotimage.preview) {
-                    previewImage = spotimage.url
-                }
-                else {
-                    previewImage = null
-                }
-            })
+            if(SpotImages.length){
+                SpotImages.forEach(spotimage => {
+                    if(spotimage.preview) {
+                        previewImage = spotimage.url
+                    }
+                    else {
+                        previewImage = null
+                    }
+                })
+            }
+            else{
+                previewImage = null
+            }
             return {
                 ...rest,
                 previewImage

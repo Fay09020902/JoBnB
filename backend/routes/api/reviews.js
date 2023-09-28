@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Review, Spot, ReviewImage } = require('../../db/models');
+const { User, Review, Spot, ReviewImage, SpotImage } = require('../../db/models');
 const e = require('express');
 
 const router = express.Router();
@@ -56,52 +56,68 @@ router.post("/:reviewId/images",
                     url: newReviewImage.url,
                 });
              });
+
   //Get all Reviews owned by the Current User
   router.get(
       "/sessions",
       requireAuth,
       async (req, res, next) => {
           const {user} = req
+            //console.log(spot.toJSON())
           const reviews = await Review.findAll(
               {
                   where: {userId: user.id},
-                  include:  {
+                  include:  [
+                    {
                       model: User,
                       attributes: ["id", "firstName", "lastName"],
                     },
-                  include:  {
-                    model: Spot,
-                    //attributes: ["id", "firstName", "lastName"],
+                    {
+                        model:Spot,
+                        attributes: {exclude: ["description", "description", "createdAt", "updatedAt","avgRating"]},
+                        include: {
+                            model: SpotImage,
+                            attributes: ["url", "preview"]
+                        }
                     },
-                  include:  {
+                    {
                     model: ReviewImage,
-                    //attributes: ["id", "firstName", "lastName"],
-                    },
+                    attributes: ["id", "url"],
+                    }
+                ]
               }
           )
 
-        //   let previewImage;
-        //   const updatedSpots = spots.map(spot => {
-        //       //console.log(spot.toJSON())
-        //       const {SpotImages, ...rest} = spot.toJSON()
-        //       SpotImages.forEach(spotimage => {
-        //           if(spotimage.preview) {
-        //               previewImage = spotimage.url
-        //           }
-        //           else {
-        //               previewImage = null
-        //           }
-        //       })
-        //       return {
-        //           ...rest,
-        //           previewImage
-        //       }
-        //    })
+          const updatedReviews = reviews.map(review => {
+            const {Spot, User, ReviewImages, ...rest} = review.toJSON()
+            const {SpotImages, ...rest1} = Spot
+            if(SpotImages.length) {
+                SpotImages.forEach(spotimage => {
+                    if(spotimage.preview) {
+                    Spot.previewImage = spotimage.url
+                    }
+                    else {
+                        Spot.previewImage = null
+                    }
+                })
+            }
+            else {
+                Spot.previewImage = null
+            }
+            return {
+                ...rest,
+                User,
+                Spot: {
+                    ...rest1,
+                    previewImage: Spot.previewImage
+                },
+                ReviewImages
+            }
+         })
 
-          return res.json({
-            Reviews: reviews
-            });
-      });
+         res.json({Reviews: updatedReviews})
+        }
+      );
 
 
 
