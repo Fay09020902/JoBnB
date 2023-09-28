@@ -222,34 +222,4 @@ router.delete(
           })
     })
 
-//
-// router.delete("/:id", async (req, res, next) => {
-//     const treeToDelete = await User.findByPk(req.params.id);
-
-//     if (!treeToDelete) {
-//         next({
-//             status: "not-found",
-//             message: `Could not remove tree ${req.params.id}`,
-//             details: "Tree not found",
-//         });
-//     }
-
-//     try {
-//         await treeToDelete.destroy();
-
-//         res.json({
-//             status: "success",
-//             message: `Successfully removed tree ${req.params.id}`,
-//         });
-//     } catch (err) {
-//         next({
-//             status: "error",
-//             message: `Could not remove tree ${req.params.id}`,
-//             details: err.errors
-//                 ? err.errors.map((item) => item.message).join(", ")
-//                 : err.message,
-//         });
-//     }
-// });
-
 module.exports = router;
