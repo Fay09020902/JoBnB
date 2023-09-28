@@ -10,30 +10,19 @@ const e = require('express');
 const router = express.Router();
 
 const validateReviews = [
-    check('email')
+    check('review')
       .exists({ checkFalsy: true })
-      .isEmail()
-      .withMessage('Invalid email'),
-    check('username')
+      .withMessage('Review text is required'),
+    check('stars')
       .exists({ checkFalsy: true })
-      .isLength({ min: 4 })
-      .withMessage('Username is required'),
-    check('username')
-      .not()
-      .isEmail()
-      .withMessage('Username cannot be an email.'),
-    check('password')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 6 })
-      .withMessage('Password must be 6 characters or more.'),
-    check('firstName')
-      .exists({ checkFalsy: true })
-      .withMessage('First Name is required'),
-    check('lastName')
-      .exists({ checkFalsy: true })
-      .withMessage('Last Name is required'),
+      .isInt({
+        min: 1,
+        max: 5,
+      })
+      .withMessage('Stars must be an integer from 1 to 5'),
     handleValidationErrors
   ];
+
 
   //Get all Reviews owned by the Current User
   router.get(

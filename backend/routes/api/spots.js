@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Spot, SpotImage } = require('../../db/models');
+const { User, Spot, SpotImage, Review } = require('../../db/models');
 const e = require('express');
 
 const router = express.Router();
@@ -48,6 +48,20 @@ const validateSignup = [
         .withMessage('Price per day is required'),
     handleValidationErrors
 ];
+
+const validateReviews = [
+    check('review')
+      .exists({ checkFalsy: true })
+      .withMessage('Review text is required'),
+    check('stars')
+      .exists({ checkFalsy: true })
+      .isInt({
+        min: 1,
+        max: 5,
+      })
+      .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+  ];
 
 //Get all Spots
 router.get(
@@ -149,8 +163,6 @@ router.get(
     });
 
 //Add an Image to a Spot based on the Spot's id
-//Create and return
-
 router.post("/:spotId/images",
             requireAuth,
             async (req, res, next) => {
@@ -221,5 +233,34 @@ router.delete(
             "message": "Successfully deleted"
           })
     })
+
+//create a Review for a Spot based on the Spot's id
+  router.post(
+    "/:spotId/reviews",
+    requireAuth,
+    validateReviews,
+    async (req, res, next) => {
+        const spotId = Number(req.params.spotId);
+        const {user} = req;
+        let { review, stars  } = req.body;
+        const curSpot = await Spot.findByPk(spotId);
+        if (!curSpot) {
+            const err = new Error("Spot couldn't be found");
+            err.status = 404;
+            return next(err);
+        };
+        const review_user = await Review.findOne({
+            where: {userId: user.id, spotId: spotId}
+        })
+        if(review_user) {
+            const err = new Error("User already has a review for this spot");
+            err.status = 500;
+            return next(err);
+        }
+        const newReview = await curSpot.createReview({
+            "userId":user.id, review, stars});
+        return res.status(201).json(newReview);
+    }
+);
 
 module.exports = router;
