@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Spot, SpotImage,ReviewImage, Review } = require('../../db/models');
+const { User, Spot, SpotImage,ReviewImage, Review, Booking } = require('../../db/models');
 const e = require('express');
 
 const router = express.Router();
@@ -61,6 +61,19 @@ const validateReviews = [
       })
       .withMessage('Stars must be an integer from 1 to 5'),
     handleValidationErrors
+  ];
+
+
+  const validateBooking = [
+    check("startDate")
+      .exists({ checkFalsy: true })
+      .isISO8601()
+      .withMessage("Enter a valid start date"),
+    check("endDate")
+      .exists({ checkFalsy: true })
+      .isISO8601()
+      .withMessage("Enter a valid end date"),
+    handleValidationErrors,
   ];
 
 //Get all Spots
@@ -266,6 +279,60 @@ router.delete(
         return res.status(201).json(newReview);
     }
 );
+
+//create a Booking for a Spot based on the Spot's id
+router.post(
+    "/:spotId/bookings",
+    requireAuth,
+    validateBooking,
+    async (req, res, next) => {
+        const spotId = Number(req.params.spotId);
+        const {user} = req;
+        let { startDate, endDate  } = req.body;
+        const curSpot = await Spot.findByPk(spotId);
+        if (!curSpot) {
+            const err = new Error("Spot couldn't be found");
+            err.status = 404;
+            return next(err);
+        };
+        const curBookings = await Booking.findAll({
+            where: {spotId: spotId}
+        })
+
+        if(curBookings.length) {
+             curBookings.forEach(booking => {
+                const start_exist = new Date(booking.startDate);
+                const end_exist = new Date(booking.endDate);
+                const start = new Date(startDate)
+                const end = new Date(endDate);
+            if(start_exist <= start && end_exist>= end) {
+                const err = new Error("Sorry, this spot is already booked for the specified dates");
+                err.status = 403;
+                return next(err);
+            }
+            if (start >= start_exist && start <= end_exist) {
+                const err = new Error("Sorry, this spot is already booked for the specified dates");
+                err.status = 403;
+                err.errors = {}
+                err.errors.startDate = "Start date conflicts with an existing booking"
+                return next(err);
+              }
+
+              if (end >= start_exist && end <= end_exist) {
+                const err = new Error("Sorry, this spot is already booked for the specified dates");
+                err.status = 403;
+                err.errors = {}
+                err.errors.endDate = "End date conflicts with an existing booking"
+                return next(err);
+              }
+            }
+            )
+        }
+        const newBooking = await curSpot.createBooking({
+            "userId":user.id, startDate, endDate});
+        return res.status(201).json(newBooking);
+    }
+)
 
 
 //Get all Reviews by a Spot's id
