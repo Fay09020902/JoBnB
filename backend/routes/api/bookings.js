@@ -2,10 +2,12 @@ const express = require('express')
 const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const { Op } = require('sequelize')
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Booking, Spot, ReviewImage, SpotImage } = require('../../db/models');
 const e = require('express');
+const { where } = require('sequelize');
 
 const router = express.Router();
 
@@ -20,41 +22,6 @@ const validateBooking = [
       .withMessage("Enter a valid end date"),
     handleValidationErrors,
   ];
-
-
-//Add an Image to a booking based on the booking's id
-router.post("/:bookingId/images",
-            requireAuth,
-            async (req, res, next) => {
-                let { url} = req.body;
-                const bookingId = Number(req.params.bookingId);
-                const { user } = req;
-                const currbooking = await booking.findByPk(bookingId);
-                if (!currbooking) {
-                    const err = new Error("booking couldn't be found");
-                    err.status = 404;
-                    return next(err);
-                }
-                //Only the owner of the booking is authorized to add an image
-                if (currbooking.userId !== user.id) {
-                    const err = new Error("Forbidden");
-                    err.status = 403;
-                    return next(err);
-                }
-                //Cannot add any more images because there is a maximum of 10 images per resource
-                const numbookingImage = await bookingImage.count({where: {bookingId}})
-                if(numbookingImage > 10){
-                    const err = new Error("Maximum number of images for this resource was reached");
-                    err.status = 403;
-                    return next(err);
-                }
-                const newbookingImage = await currbooking.createbookingImage({url});
-
-                return res.json({
-                    id: newbookingImage.id,
-                    url: newbookingImage.url,
-                });
-             });
 
   //Get all bookings owned by the Current User
   router.get(
@@ -114,19 +81,63 @@ router.put(
     validateBooking,
     async (req, res, next) => {
         const {bookingId} = req.params
+        const {startDate, endDate} = req.body
         const {user} = req
-        const booking = await booking.findByPk(bookingId)
+        const booking = await Booking.findByPk(bookingId)
         if (!booking) {
-            const err = new Error("booking couldn't be found");
+            const err = new Error("Booking couldn't be found");
             err.status = 404;
             return next(err);
         }
+
         //Only the owner of the booking is authorized to edit
         if (booking.userId !== user.id) {
             const err = new Error("Forbidden");
             err.status = 403;
             return next(err);
           }
+        //Can't edit a booking that's past the end date
+        if (new Date(booking.endDate) < new Date()) {
+            const err = new Error("Past bookings can't be modified");
+            err.status = 403;
+            return next(err);
+        }
+
+        const bookedDates = await Booking.findAll(
+            {where: {spotId: booking.spotId},
+            [Op.not]: {id: bookingId}
+        }
+        )
+        if(bookedDates.length) {
+            bookedDates.forEach(booking => {
+               const start_exist = new Date(booking.startDate);
+               const end_exist = new Date(booking.endDate);
+               const start = new Date(startDate)
+               const end = new Date(endDate);
+           if(start_exist <= start && end_exist>= end) {
+               const err = new Error("Sorry, this spot is already booked for the specified dates");
+               err.status = 403;
+               return next(err);
+           }
+           if (start >= start_exist && start <= end_exist) {
+               const err = new Error("Sorry, this spot is already booked for the specified dates");
+               err.status = 403;
+               err.errors = {}
+               err.errors.startDate = "Start date conflicts with an existing booking"
+               return next(err);
+             }
+
+             if (end >= start_exist && end <= end_exist) {
+               const err = new Error("Sorry, this spot is already booked for the specified dates");
+               err.status = 403;
+               err.errors = {}
+               err.errors.endDate = "End date conflicts with an existing booking"
+               return next(err);
+             }
+           }
+           )
+       }
+
         const updatedbooking = await booking.update(req.body);
         return res.json(updatedbooking)
     });
@@ -138,7 +149,7 @@ router.delete(
     async (req, res, next) => {
         const {bookingId} = req.params
         const {user} = req
-        const booking = await booking.findByPk(bookingId)
+        const booking = await Booking.findByPk(bookingId)
         if (!booking) {
             const err = new Error("Spot couldn't be found");
             err.status = 404;
