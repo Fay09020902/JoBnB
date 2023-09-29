@@ -176,6 +176,11 @@ router.get(
     async (req, res, next) => {
         const {spotId} = req.params
         const spot = await Spot.findByPk(spotId)
+        if (!spot) {
+            const err = new Error("Spot couldn't be found");
+            err.status = 404;
+            return next(err);
+        }
         return res.json(spot);
     });
 
@@ -305,33 +310,34 @@ router.post(
         })
 
         if(curBookings.length) {
-             curBookings.forEach(booking => {
-                const start_exist = new Date(booking.startDate);
-                const end_exist = new Date(booking.endDate);
-                const start = new Date(startDate)
-                const end = new Date(endDate);
-            if(start_exist <= start && end_exist>= end) {
-                const err = new Error("Sorry, this spot is already booked for the specified dates");
-                err.status = 403;
-                return next(err);
-            }
-            if (start >= start_exist && start <= end_exist) {
-                const err = new Error("Sorry, this spot is already booked for the specified dates");
-                err.status = 403;
-                err.errors = {}
-                err.errors.startDate = "Start date conflicts with an existing booking"
-                return next(err);
-              }
+            if(endDate > startDate) {
+                curBookings.forEach(booking => {
+                    const start_exist = new Date(booking.startDate);
+                    const end_exist = new Date(booking.endDate);
+                    const start = new Date(startDate)
+                    const end = new Date(endDate);
+                if(start_exist <= start && end_exist>= end) {
+                    const err = new Error("Sorry, this spot is already booked for the specified dates");
+                    err.status = 403;
+                    return next(err);
+                }
+                if (start >= start_exist && start <= end_exist) {
+                    const err = new Error("Sorry, this spot is already booked for the specified dates");
+                    err.status = 403;
+                    err.errors = {}
+                    err.errors.startDate = "Start date conflicts with an existing booking"
+                    return next(err);
+                }
 
-              if (end >= start_exist && end <= end_exist) {
-                const err = new Error("Sorry, this spot is already booked for the specified dates");
-                err.status = 403;
-                err.errors = {}
-                err.errors.endDate = "End date conflicts with an existing booking"
-                return next(err);
-              }
-            }
-            )
+                if (end >= start_exist && end <= end_exist) {
+                    const err = new Error("Sorry, this spot is already booked for the specified dates");
+                    err.status = 403;
+                    err.errors = {}
+                    err.errors.endDate = "End date conflicts with an existing booking"
+                    return next(err);
+                }
+                }
+            )}
         }
         const newBooking = await curSpot.createBooking({
             "userId":user.id, startDate, endDate});
