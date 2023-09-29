@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Spot, SpotImage,ReviewImage, Review, Booking } = require('../../db/models');
+const { User, Spot, SpotImage,ReviewImage, Review, Booking, sequelize } = require('../../db/models');
 const e = require('express');
 
 const router = express.Router();
@@ -175,13 +175,36 @@ router.get(
     "/:spotId",
     async (req, res, next) => {
         const {spotId} = req.params
-        const spot = await Spot.findByPk(spotId)
+        const spot = await Spot.findByPk(spotId,
+            {
+                include :[
+                    {
+                        model: Review,
+                        attributes:[
+                            [sequelize.fn("COUNT", sequelize.col("review")), "numReviews"],
+                            [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
+                        ]
+                    },
+                    {
+                        model: SpotImage,
+                        attributes: ["id", "url", "preview"]
+                    },
+                    {
+                        model: User,
+                        as: 'Owner',
+                        attributes: ["id", "firstName", "lastName"]
+                    }
+                ]
+            })
         if (!spot) {
             const err = new Error("Spot couldn't be found");
             err.status = 404;
             return next(err);
         }
-        return res.json(spot);
+        const {Reviews, Owner, SpotImages, ...rest} = spot.toJSON()
+        let updateSpot = {}
+        updateSpot = {...rest, ...Reviews[0], SpotImages, Owner}
+        return res.json(updateSpot);
     });
 
 //Add an Image to a Spot based on the Spot's id
