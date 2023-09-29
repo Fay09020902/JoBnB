@@ -149,18 +149,28 @@ router.delete(
     async (req, res, next) => {
         const {bookingId} = req.params
         const {user} = req
-        const booking = await Booking.findByPk(bookingId)
+        const booking = await Booking.findByPk(bookingId,
+            {include: {
+                model: Spot,
+                attributes: ["ownerId"]
+            }})
+        console.log(booking)
+
         if (!booking) {
             const err = new Error("Spot couldn't be found");
             err.status = 404;
             return next(err);
         }
-        //Only the owner of the booking is authorized to edit
-        if (booking.userId !== user.id) {
+        //Only the owner of the booking or the owner of the spot is authorized to
+//delete the booking
+//console.log("(booking.userId !== user.id)",(booking.userId !== user.id))
+        if ( booking.userId !== user.id ) {
+            if(booking.Spot.ownerId !== user.id){
             const err = new Error("Forbidden");
             err.status = 403;
             return next(err);
-          }
+        }
+        }
         await booking.destroy();
         return res.json({
             "message": "Successfully deleted"
