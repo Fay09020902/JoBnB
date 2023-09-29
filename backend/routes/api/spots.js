@@ -295,6 +295,11 @@ router.post(
             err.status = 404;
             return next(err);
         };
+        if (curSpot.ownerId === user.id) {
+            const err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+        }
         const curBookings = await Booking.findAll({
             where: {spotId: spotId}
         })
@@ -358,5 +363,43 @@ router.get(
         return res.json({Reviews: reviews});
     });
 
+//Get all bookings by a Spot's id
+router.get(
+    "/:spotId/bookings",
+    requireAuth,
+    async (req, res, next) => {
+        const {spotId} = req.params
+        const {user} = req
+        const spot = await Spot.findByPk(spotId)
+        if (!spot) {
+            const err = new Error("Spot couldn't be found");
+            err.status = 404;
+            return next(err);
+        };
+        if (spot.ownerId === user.id) {
+            const bookings = await Booking.findAll({
+                where: {
+                    spotId
+                },
+                include: {
+                    model: User,
+                    attributes: ["id", "firstName", "lastName"]
+                },
+                //attributes: ["spotId", "startDate", "endDate"]
+                }
+            )
+            return res.json({Bookings: bookings});
+        }
+        else {
+            const bookings = await Booking.findAll({
+                where: {
+                    spotId
+                },
+                attributes: ["spotId", "startDate", "endDate"]
+                }
+            )
+            return res.json({Bookings: bookings});
+        }
+    });
 
 module.exports = router;

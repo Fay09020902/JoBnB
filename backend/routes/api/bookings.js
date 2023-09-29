@@ -4,24 +4,23 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, booking, Spot, bookingImage, SpotImage } = require('../../db/models');
+const { User, Booking, Spot, ReviewImage, SpotImage } = require('../../db/models');
 const e = require('express');
 
 const router = express.Router();
 
-const validatebookings = [
-    check('booking')
+const validateBooking = [
+    check("startDate")
       .exists({ checkFalsy: true })
-      .withMessage('booking text is required'),
-    check('stars')
+      .isISO8601()
+      .withMessage("Enter a valid start date"),
+    check("endDate")
       .exists({ checkFalsy: true })
-      .isInt({
-        min: 1,
-        max: 5,
-      })
-      .withMessage('Stars must be an integer from 1 to 5'),
-    handleValidationErrors
+      .isISO8601()
+      .withMessage("Enter a valid end date"),
+    handleValidationErrors,
   ];
+
 
 //Add an Image to a booking based on the booking's id
 router.post("/:bookingId/images",
@@ -63,59 +62,48 @@ router.post("/:bookingId/images",
       requireAuth,
       async (req, res, next) => {
           const {user} = req
-            //console.log(spot.toJSON())
-          const bookings = await booking.findAll(
+          const bookings = await Booking.findAll(
               {
                   where: {userId: user.id},
                   include:  [
-                    {
-                      model: User,
-                      attributes: ["id", "firstName", "lastName"],
-                    },
                     {
                         model:Spot,
                         attributes: {exclude: ["description", "description", "createdAt", "updatedAt","avgRating"]},
                         include: {
                             model: SpotImage,
-                            attributes: ["url", "pbooking"]
+                            attributes: ["url", "preview"]
                         }
                     },
-                    {
-                    model: bookingImage,
-                    attributes: ["id", "url"],
-                    }
                 ]
               }
           )
 
-          const updatedbookings = bookings.map(booking => {
-            const {Spot, User, bookingImages, ...rest} = booking.toJSON()
+          const updatedBookings = bookings.map(booking => {
+            const {Spot,  ...rest} = booking.toJSON()
             const {SpotImages, ...rest1} = Spot
             if(SpotImages.length) {
                 SpotImages.forEach(spotimage => {
-                    if(spotimage.pbooking) {
-                    Spot.pbookingImage = spotimage.url
+                    if(spotimage.preview) {
+                    Spot.previewImage = spotimage.url
                     }
                     else {
-                        Spot.pbookingImage = null
+                        Spot.previewImage = null
                     }
                 })
             }
             else {
-                Spot.pbookingImage = null
+                Spot.previewImage = null
             }
             return {
                 ...rest,
-                User,
                 Spot: {
                     ...rest1,
-                    pbookingImage: Spot.pbookingImage
+                    previewImage: Spot.previewImage
                 },
-                bookingImages
             }
          })
 
-         res.json({bookings: updatedbookings})
+         res.json({bookings: updatedBookings})
         }
       );
 
@@ -123,7 +111,7 @@ router.post("/:bookingId/images",
 router.put(
     "/:bookingId",
     requireAuth,
-    validatebookings,
+    validateBooking,
     async (req, res, next) => {
         const {bookingId} = req.params
         const {user} = req
