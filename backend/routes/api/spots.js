@@ -1,7 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
+const { handleValidationErrors, validateQuery } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Spot, SpotImage,ReviewImage, Review, Booking, sequelize } = require('../../db/models');
@@ -76,39 +76,39 @@ const validateReviews = [
     handleValidationErrors,
   ];
 
-//Get all Spots
-router.get(
-    "/",
-    async (req, res, next) => {
-        const spots = await Spot.findAll({
-            include:  {
-                model: SpotImage,
-                attributes: ["url", "preview"],
-            }
-        })
+// //Get all Spots
+// router.get(
+//     "/",
+//     async (req, res, next) => {
+//         const spots = await Spot.findAll({
+//             include:  {
+//                 model: SpotImage,
+//                 attributes: ["url", "preview"],
+//             }
+//         })
 
-        let previewImage;
-        const updatedSpots = spots.map(spot => {
-            //console.log(spot.toJSON())
-            const {SpotImages, ...rest} = spot.toJSON()
-            SpotImages.forEach(spotimage => {
-                if(spotimage.preview) {
-                    previewImage = spotimage.url
-                }
-                else {
-                    previewImage = null
-                }
-            })
-            return {
-                ...rest,
-                previewImage
-            }
-         })
+//         let previewImage;
+//         const updatedSpots = spots.map(spot => {
+//             //console.log(spot.toJSON())
+//             const {SpotImages, ...rest} = spot.toJSON()
+//             SpotImages.forEach(spotimage => {
+//                 if(spotimage.preview) {
+//                     previewImage = spotimage.url
+//                 }
+//                 else {
+//                     previewImage = null
+//                 }
+//             })
+//             return {
+//                 ...rest,
+//                 previewImage
+//             }
+//          })
 
-        return res.json({
-            Spots: updatedSpots
-          });
-    })
+//         return res.json({
+//             Spots: updatedSpots
+//           });
+//     })
 //Create a Spot
 router.post(
     "/",
@@ -430,5 +430,76 @@ router.get(
             return res.json({Bookings: bookings});
         }
     });
+
+
+
+//Get all spots and querying
+router.get(
+    "/",
+    validateQuery,
+    async (req, res, next) => {
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } =
+      req.query;
+
+    const pagination = {}
+    if (!page) page = 1
+    if (!size) size = 20
+
+    page = parseInt(page)
+    size = parseInt(size)
+
+    if (page >= 1 && size >= 1) {
+    pagination.limit = size
+    pagination.offset = size * (page - 1)
+    }
+
+    // search parameters
+    const where = {}
+    if (minLat) where.lat = { [Op.gt]: minLat }
+    if (maxLat) where.lat = { [Op.lt]: maxLat }
+    if (minLng) where.lng = { [Op.gt]: minLng }
+    if (maxLng) where.lng = { [Op.lt]: maxLng }
+    if (minPrice) where.price = { [Op.gt]: minPrice }
+    if (maxPrice) where.price = { [Op.lt]: maxPrice }
+
+    const allSpotsData = await Spot.findAll({
+        where,
+        ...pagination
+      })
+
+    const updatedSpots = [];
+    for (let i = 0; i < allSpotsData.length; i++) {
+        let spot = allSpotsData[i].toJSON()
+        const spotImage = await SpotImage.findOne({
+          where: { spotId: spot.id, preview: true },
+        });
+        console.log("this is current llopp----------")
+        if(spotImage) {
+            spot.previewImage = spotImage.url
+        }
+        else {
+            spot.previewImage = null
+        }
+
+        let starRating = await allSpotsData[i].getReviews({
+                attributes: [
+                    [sequelize.fn('ROUND', sequelize.fn('AVG', sequelize.col('stars')), 1), 'avgRating']
+                ]
+                })
+        console.log("this is cur star rating:", starRating)
+        if(starRating[0].toJSON().avgRating) {
+            spot.avgRating = starRating[0].toJSON().avgRating
+        }
+        else{
+            spot.avgRating = 0
+        }
+        updatedSpots.push({
+            ...spot,
+          });
+      };
+
+
+      return res.json({Spots: updatedSpots, page, size})
+  });
 
 module.exports = router;
