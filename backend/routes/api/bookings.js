@@ -139,6 +139,12 @@ router.put(
                err.errors.endDate = "End date conflicts with an existing booking"
                return next(err);
              }
+             //dates surrond existing boooking
+             if(start>= start_exist && end >= end_exist) {
+                const err = new Error("Sorry, this spot is already booked for the specified dates");
+                err.status = 403;
+                return next(err);
+            }
            }
            )
        }
