@@ -44,7 +44,7 @@ router.post("/:reviewId/images",
                 }
                 //Cannot add any more images because there is a maximum of 10 images per resource
                 const numReviewImage = await ReviewImage.count({where: {reviewId}})
-                if(numReviewImage > 10){
+                if(numReviewImage >= 10){
                     const err = new Error("Maximum number of images for this resource was reached");
                     err.status = 403;
                     return next(err);
