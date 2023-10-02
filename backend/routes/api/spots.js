@@ -196,7 +196,8 @@ router.get(
                     }
                 ]
             })
-        if (!spot) {
+
+        if (!spot.toJSON().id) {
             const err = new Error("Spot couldn't be found");
             err.status = 404;
             return next(err);
