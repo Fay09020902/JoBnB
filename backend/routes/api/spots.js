@@ -221,6 +221,12 @@ router.post("/:spotId/images",
                     err.status = 404;
                     return next(err);
                 }
+                 //Only the owner of the spot is authorized to edit
+        if (currSpot.ownerId !== user.id) {
+            const err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+          }
                 const newSpotImage = await currSpot.createSpotImage({url, preview});
                 //const spot = await SpotImage.findOne()
                 return res.json({
