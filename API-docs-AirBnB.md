@@ -705,7 +705,6 @@ Returns all the reviews that belong to a spot specified by id.
         {
           "id": 1,
           "userId": 1,
-          "spotId": 1,
           "review": "This was an awesome spot!",
           "stars": 5,
           "createdAt": "2021-11-19 20:39:36",

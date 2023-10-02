@@ -23,11 +23,6 @@ module.exports = {
       "review": "This was a bad review!",
       "stars": 1
     },
-    {"userId": 4,
-      "spotId": 2,
-      "review": "This was a bad review!",
-      "stars": 1
-    },
   ],  { validate: true })
   },
 
