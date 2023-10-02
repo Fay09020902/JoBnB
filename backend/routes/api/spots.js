@@ -346,11 +346,13 @@ router.post(
                     const end_exist = new Date(booking.endDate);
                     const start = new Date(startDate)
                     const end = new Date(endDate);
+                //dates within existing booking
                 if(start_exist <= start && end_exist>= end) {
                     const err = new Error("Sorry, this spot is already booked for the specified dates");
                     err.status = 403;
                     return next(err);
                 }
+                //start date on existing start date/end date
                 if (start >= start_exist && start <= end_exist) {
                     const err = new Error("Sorry, this spot is already booked for the specified dates");
                     err.status = 403;
@@ -358,12 +360,18 @@ router.post(
                     err.errors.startDate = "Start date conflicts with an existing booking"
                     return next(err);
                 }
-
+                //end date on existing start date/end date
                 if (end >= start_exist && end <= end_exist) {
                     const err = new Error("Sorry, this spot is already booked for the specified dates");
                     err.status = 403;
                     err.errors = {}
                     err.errors.endDate = "End date conflicts with an existing booking"
+                    return next(err);
+                }
+                //dates surrond existing boooking
+                if(start>= start_exist && end >= end_exist) {
+                    const err = new Error("Sorry, this spot is already booked for the specified dates");
+                    err.status = 403;
                     return next(err);
                 }
                 }

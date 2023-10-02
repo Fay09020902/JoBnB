@@ -104,8 +104,13 @@ router.put(
         }
 
         const bookedDates = await Booking.findAll(
-            {where: {spotId: booking.spotId},
-            [Op.not]: {id: bookingId}
+            {
+                where: {
+                    spotId: booking.spotId,
+                    id: {
+                      [Op.not]: bookingId
+                    }
+                  }
         }
         )
         if(bookedDates.length) {
