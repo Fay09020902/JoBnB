@@ -203,10 +203,21 @@ router.get(
             err.status = 404;
             return next(err);
         }
+        console.log(spot.toJSON())
         const {Reviews, Owner, SpotImages, ...rest} = spot.toJSON()
         let updateSpot = {}
+
+        if(!Reviews.length){
+
+            let numReviews = 0;
+            let avgStarRating = 0;
+            return res.json({...rest, numReviews, avgStarRating, SpotImages, Owner})
+        }
+        else{
         updateSpot = {...rest, ...Reviews[0], SpotImages, Owner}
         return res.json(updateSpot);
+        }
+
     });
 
 //Add an Image to a Spot based on the Spot's id
