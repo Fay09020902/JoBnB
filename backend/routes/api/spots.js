@@ -176,48 +176,89 @@ router.get(
     "/:spotId",
     async (req, res, next) => {
         const {spotId} = req.params
-        const spot = await Spot.findByPk(spotId,
-            {
-                include :[
-                    {
-                        model: Review,
-                        attributes:[
-                            [sequelize.fn("COUNT", sequelize.col("review")), "numReviews"],
-                            [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
-                        ]
-                    },
-                    {
-                        model: SpotImage,
-                        attributes: ["id", "url", "preview"]
-                    },
-                    {
-                        model: User,
-                        as: 'Owner',
-                        attributes: ["id", "firstName", "lastName"]
-                    }
-                ]
-            })
+        // const spot = await Spot.findByPk(spotId,
+        //     {
+        //         include :[
+        //             {
+        //                 model: Review,
+        //                 attributes:[
+        //                     [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"],
+        //                     [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgStarRating"],
+        //                 ],
+        //             },
+        //             {
+        //                 model: SpotImage,
+        //                 attributes: ["id", "url", "preview"]
+        //             },
+        //             {
+        //                 model: User,
+        //                 as: 'Owner',
+        //                 attributes: ["id", "firstName", "lastName"]
+        //             }
+        //         ]
+        //     })
 
-        if (!spot.toJSON().id) {
+        // if (!spot.toJSON().id) {
+        //     const err = new Error("Spot couldn't be found");
+        //     err.status = 404;
+        //     return next(err);
+        // }
+        // const {Reviews, Owner, SpotImages, ...rest} = spot.toJSON()
+        // let updateSpot = {}
+
+        // if(!Reviews.length){
+
+        //     let numReviews = 0;
+        //     let avgStarRating = 0;
+        //     return res.json({...rest, numReviews, avgStarRating, SpotImages, Owner})
+        // }
+        // else{
+        // updateSpot = {...rest, ...Reviews[0], SpotImages, Owner}
+        // return res.json(updateSpot);
+        // }
+        const curSpot = await Spot.findByPk(spotId,
+                {
+                    include :[
+                        {
+                            model: Review
+                        },
+                        {
+                            model: SpotImage,
+                            attributes: ["id", "url", "preview"]
+                        },
+                        {
+                            model: User,
+                            as: 'Owner',
+                            attributes: ["id", "firstName", "lastName"]
+                        }
+                    ]
+                });
+        if (!curSpot.toJSON().id) {
             const err = new Error("Spot couldn't be found");
             err.status = 404;
             return next(err);
         }
-        console.log(spot.toJSON())
-        const {Reviews, Owner, SpotImages, ...rest} = spot.toJSON()
-        let updateSpot = {}
-
+        const {Reviews, Owner, SpotImages, ...rest} = curSpot.toJSON()
+        let avgStarRating
         if(!Reviews.length){
-
-            let numReviews = 0;
             let avgStarRating = 0;
             return res.json({...rest, numReviews, avgStarRating, SpotImages, Owner})
         }
         else{
-        updateSpot = {...rest, ...Reviews[0], SpotImages, Owner}
-        return res.json(updateSpot);
+            let sum = 0;
+            Reviews.forEach(review => {
+                sum+= review.stars
+            })
+            avgStarRating = Math.round((sum / Reviews.length) * 10) / 10;
         }
-
+        const updatedSpot = {
+            ...rest,
+            numReviews:Reviews.length,
+            avgStarRating,
+            SpotImages,
+            Owner
+        }
+        return res.json(updatedSpot)
     });
 
 //Add an Image to a Spot based on the Spot's id
