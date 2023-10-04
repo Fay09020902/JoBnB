@@ -233,7 +233,7 @@ router.get(
                         }
                     ]
                 });
-        if (!curSpot.toJSON().id) {
+        if (!curSpot) {
             const err = new Error("Spot couldn't be found");
             err.status = 404;
             return next(err);
@@ -242,7 +242,7 @@ router.get(
         let avgStarRating
         if(!Reviews.length){
             let avgStarRating = 0;
-            return res.json({...rest, numReviews, avgStarRating, SpotImages, Owner})
+            return res.json({...rest, numReviews:Reviews.length, avgStarRating, SpotImages, Owner})
         }
         else{
             let sum = 0;
@@ -433,7 +433,17 @@ router.post(
                 }
                 }
             }
+            else{
+                const err = new Error("Validation error: endDate cannot be on or before startDate");
+                err.status = 403;
+                return next(err);
+            }
         }
+        if(endDate <= startDate) {
+            const err = new Error("Validation error: endDate cannot be on or before startDate");
+            err.status = 403;
+            return next(err);
+            }
 
         const newBooking = await curSpot.createBooking({
             "userId":user.id, startDate, endDate});

@@ -114,40 +114,51 @@ router.put(
         }
         )
         if(bookedDates.length) {
-            for (let booking of bookedDates) {
+            if(endDate > startDate){
+                for (let booking of bookedDates) {
+                    const start_exist = new Date(booking.startDate);
+                    const end_exist = new Date(booking.endDate);
+                    const start = new Date(startDate)
+                    const end = new Date(endDate);
+                    if(start_exist <= start && end_exist>= end) {
+                        const err = new Error("Sorry, this spot is already booked for the specified dates");
+                        err.status = 403;
+                        return next(err);
+                    }
+                    if (start >= start_exist && start <= end_exist) {
+                        const err = new Error("Sorry, this spot is already booked for the specified dates");
+                        err.status = 403;
+                        err.errors = {}
+                        err.errors.startDate = "Start date conflicts with an existing booking"
+                        return next(err);
+                        }
 
-               const start_exist = new Date(booking.startDate);
-               const end_exist = new Date(booking.endDate);
-               const start = new Date(startDate)
-               const end = new Date(endDate);
-           if(start_exist <= start && end_exist>= end) {
-               const err = new Error("Sorry, this spot is already booked for the specified dates");
-               err.status = 403;
-               return next(err);
-           }
-           if (start >= start_exist && start <= end_exist) {
-               const err = new Error("Sorry, this spot is already booked for the specified dates");
-               err.status = 403;
-               err.errors = {}
-               err.errors.startDate = "Start date conflicts with an existing booking"
-               return next(err);
-             }
-
-             if (end >= start_exist && end <= end_exist) {
-               const err = new Error("Sorry, this spot is already booked for the specified dates");
-               err.status = 403;
-               err.errors = {}
-               err.errors.endDate = "End date conflicts with an existing booking"
-               return next(err);
-             }
-             //dates surrond existing boooking
-             if(start<= start_exist && end >= end_exist) {
-                const err = new Error("Sorry, this spot is already booked for the specified dates");
+                        if (end >= start_exist && end <= end_exist) {
+                        const err = new Error("Sorry, this spot is already booked for the specified dates");
+                        err.status = 403;
+                        err.errors = {}
+                        err.errors.endDate = "End date conflicts with an existing booking"
+                        return next(err);
+                        }
+                        //dates surrond existing boooking
+                        if(start<= start_exist && end >= end_exist) {
+                            const err = new Error("Sorry, this spot is already booked for the specified dates");
+                            err.status = 403;
+                            return next(err);
+                        }
+                }
+        }
+            else{
+                const err = new Error("Validation error: endDate cannot be on or before startDate");
                 err.status = 403;
                 return next(err);
             }
-           }
        }
+       if(endDate <= startDate) {
+        const err = new Error("Validation error: endDate cannot be on or before startDate");
+        err.status = 403;
+        return next(err);
+        }
 
         const updatedbooking = await booking.update(req.body);
         return res.json(updatedbooking)
@@ -165,16 +176,15 @@ router.delete(
                 model: Spot,
                 attributes: ["ownerId"]
             }})
-        console.log(booking)
 
         if (!booking) {
-            const err = new Error("Spot couldn't be found");
+            const err = new Error("Booking couldn't be found");
             err.status = 404;
             return next(err);
         }
         //Only the owner of the booking or the owner of the spot is authorized to
 //delete the booking
-//console.log("(booking.userId !== user.id)",(booking.userId !== user.id))
+
         if ( booking.userId !== user.id ) {
             if(booking.Spot.ownerId !== user.id){
             const err = new Error("Forbidden");
@@ -182,6 +192,13 @@ router.delete(
             return next(err);
         }
         }
+
+        if (new Date(booking.startDate) < new Date()) {
+            const err = new Error("Bookings that have been started can't be deleted");
+            err.status = 403;
+            return next(err);
+        }
+
         await booking.destroy();
         return res.json({
             "message": "Successfully deleted"
