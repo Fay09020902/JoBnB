@@ -25,7 +25,7 @@ const validateBooking = [
 
   //Get all bookings owned by the Current User
   router.get(
-      "/sessions",
+      "/current",
       requireAuth,
       async (req, res, next) => {
           const {user} = req
