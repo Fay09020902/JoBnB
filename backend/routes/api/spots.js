@@ -510,7 +510,7 @@ router.get(
         const spotImage = await SpotImage.findOne({
           where: { spotId: spot.id, preview: true },
         });
-        console.log("this is current llopp----------")
+        //console.log("this is current llopp----------")
         if(spotImage) {
             spot.previewImage = spotImage.url
         }
@@ -523,7 +523,7 @@ router.get(
                     [sequelize.fn('ROUND', sequelize.fn('AVG', sequelize.col('stars')), 1), 'avgRating']
                 ]
                 })
-        console.log("this is cur star rating:", starRating)
+        //console.log("this is cur star rating:", starRating)
         if(starRating[0].toJSON().avgRating) {
             spot.avgRating = starRating[0].toJSON().avgRating
         }
