@@ -360,14 +360,14 @@ router.post(
                     const end = new Date(endDate);
                 //dates within existing booking
                 if(start_exist <= start && end_exist>= end) {
-                    console.log("in this case1")
+                    //console.log("in this case1")
                     const err = new Error("Sorry, this spot is already booked for the specified dates");
                     err.status = 403;
                     return next(err);
                 }
                 //start date on existing start date/end date
                 if (start >= start_exist && start <= end_exist) {
-                    console.log("in this case2")
+                    //console.log("in this case2")
                     const err = new Error("Sorry, this spot is already booked for the specified dates");
                     err.status = 403;
                     err.errors = {}
@@ -376,7 +376,7 @@ router.post(
                 }
                 //end date on existing start date/end date
                 if (end >= start_exist && end <= end_exist) {
-                    console.log("in this case3")
+                    //console.log("in this case3")
                     const err = new Error("Sorry, this spot is already booked for the specified dates");
                     err.status = 403;
                     err.errors = {}
@@ -385,18 +385,18 @@ router.post(
                 }
                 //dates surrond existing boooking
                 if(start>= start_exist && end >= end_exist) {
-                    console.log("in this case4")
+                    //console.log("in this case4")
                     const err = new Error("Sorry, this spot is already booked for the specified dates");
                     err.status = 403;
                     return next(err);
                 }
                 }
             }
+        }
 
         const newBooking = await curSpot.createBooking({
             "userId":user.id, startDate, endDate});
         return res.status(201).json(newBooking);
-    }
     }
 )
 
