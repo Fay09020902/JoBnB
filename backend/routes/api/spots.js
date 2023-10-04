@@ -417,10 +417,14 @@ router.get(
             where: {
                 spotId
             },
-            include: {
-                model: ReviewImage,
-                attributes: ["id", "url"]
-            }
+            include: [
+                {model: ReviewImage,
+                attributes: ["id", "url"]},
+                {
+                    model: User,
+                    attributes: ["id", "firstName", "lastName"]
+                }
+            ]
         })
         return res.json({Reviews: reviews});
     });
