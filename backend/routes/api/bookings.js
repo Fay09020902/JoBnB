@@ -114,7 +114,8 @@ router.put(
         }
         )
         if(bookedDates.length) {
-            bookedDates.forEach(booking => {
+            for (let booking of bookedDates) {
+
                const start_exist = new Date(booking.startDate);
                const end_exist = new Date(booking.endDate);
                const start = new Date(startDate)
@@ -140,13 +141,12 @@ router.put(
                return next(err);
              }
              //dates surrond existing boooking
-             if(start>= start_exist && end >= end_exist) {
+             if(start<= start_exist && end >= end_exist) {
                 const err = new Error("Sorry, this spot is already booked for the specified dates");
                 err.status = 403;
                 return next(err);
             }
            }
-           )
        }
 
         const updatedbooking = await booking.update(req.body);
