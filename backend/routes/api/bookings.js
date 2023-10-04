@@ -149,15 +149,19 @@ router.put(
                 }
         }
             else{
-                const err = new Error("Validation error: endDate cannot be on or before startDate");
-                err.status = 403;
-                return next(err);
+                const err = new Error("Bad Request");
+            err.status = 403;
+            err.errors = {}
+            err.errors.endDate = "endDate cannot be on or before startDate"
+            return next(err);
             }
        }
        if(endDate <= startDate) {
-        const err = new Error("Validation error: endDate cannot be on or before startDate");
-        err.status = 403;
-        return next(err);
+            const err = new Error("Bad Request");
+            err.status = 403;
+            err.errors = {}
+            err.errors.endDate = "endDate cannot be on or before startDate"
+            return next(err);
         }
 
         const updatedbooking = await booking.update(req.body);
