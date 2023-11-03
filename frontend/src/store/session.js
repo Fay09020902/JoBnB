@@ -10,6 +10,7 @@ const setUser = (user) => {
   };
 };
 
+
 export const login = (user) => async (dispatch) => {
     const { credential, password } = user;
     const response = await csrfFetch("/api/session", {
@@ -21,11 +22,11 @@ export const login = (user) => async (dispatch) => {
     });
     if(response.ok) {
         const data = await response.json();
-        dispatch(setUser(data.user));
-        return response;
-    }
+    dispatch(setUser(data.user));
     return response;
-  };
+  }
+}
+
 
 const initialState = {user: null}
 
