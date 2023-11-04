@@ -48,7 +48,7 @@ function LoginFormPage() {
             required
           />
         </label>
-        {{errors} && <p>{Object.values(errors)}</p>}
+        {{errors} && <p className="error-message">{Object.values(errors)}</p>}
         <button type="submit">Log In</button>
       </form>
     </div>
