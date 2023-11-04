@@ -1,4 +1,4 @@
-import LoginFormPage from "./component/LoginFormPage";
+import LoginFormPage from "./component/LoginFormModal";
 import SignupFormPage from "./component/SignupFormPage";
 import Navigation from "./component/Navigation";
 import React, { useState, useEffect } from "react";
@@ -23,9 +23,6 @@ function App() {
      <Navigation isLoaded={isLoaded} />
     {isLoaded && (
      <Switch>
-      <Route path="/login">
-        <LoginFormPage />
-      </Route>
       <Route path="/signup">
           <SignupFormPage />
       </Route>
