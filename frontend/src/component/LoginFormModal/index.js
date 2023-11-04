@@ -6,7 +6,6 @@ import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
 function LoginFormModal() {
-  console.log("LoginFormPage runs")
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [credential, setCredential] = useState("");
@@ -15,7 +14,6 @@ function LoginFormModal() {
   const { closeModal } = useModal();
 
   //if (sessionUser) return <Redirect to="/" />;
-  //console.log("session user: ", sessionUser)
 
 
   const handleSubmit = (e) => {

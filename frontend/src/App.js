@@ -7,7 +7,6 @@ import { Route, Switch } from "react-router-dom";
 import * as sessionActions from "./store/session";
 
 function App() {
-  console.log("app runs")
   const dispatch = useDispatch();
   // useEffect(() => {
   //   dispatch(sessionActions.restoreUser());
