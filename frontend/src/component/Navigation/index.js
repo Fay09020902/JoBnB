@@ -4,34 +4,14 @@ import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import OpenModalButton from "../OpenModalButton";
 import LoginFormModal from "../LoginFormModal";
-//import './Navigation.css';
+import SignupFormModal from "../SignupFormModal";
+//import "./Navigation.css";
 
-function Navigation({ isLoaded }){
-  const sessionUser = useSelector(state => state.session.user);
-  //const dispatch = useDispatch();
-
-//   const logout = (e) => {
-//     e.preventDefault();
-//     dispatch(sessionActions.logout());
-//   };
+function Navigation({ isLoaded }) {
+  const sessionUser = useSelector((state) => state.session.user);
 
   let sessionLinks;
-//   if (sessionUser) {
-//     sessionLinks = (
-//       <li>
-//         <ProfileButton user={sessionUser} />
-//         <button onClick={logout}>Log Out</button>
-//       </li>
-//     );
-//   } else {
-//     sessionLinks = (
-//       <li>
-//         <div><NavLink to="/login">Log In</NavLink></div>
-//         <div><NavLink to="/signup">Sign Up</NavLink></div>
-//       </li>
-//     );
-//   }
-if (sessionUser) {
+  if (sessionUser) {
     sessionLinks = (
       <li>
         <ProfileButton user={sessionUser} />
@@ -44,7 +24,10 @@ if (sessionUser) {
           buttonText="Log In"
           modalComponent={<LoginFormModal />}
         />
-        <div><NavLink to="/signup">Sign Up</NavLink></div>
+        <OpenModalButton
+          buttonText="Sign Up"
+          modalComponent={<SignupFormModal />}
+        />
       </li>
     );
   }
@@ -52,7 +35,9 @@ if (sessionUser) {
   return (
     <ul>
       <li>
-        <NavLink exact to="/">Home</NavLink>
+        <NavLink exact to="/">
+          Home
+        </NavLink>
       </li>
       {isLoaded && sessionLinks}
     </ul>

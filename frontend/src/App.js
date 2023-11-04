@@ -1,5 +1,5 @@
 import LoginFormPage from "./component/LoginFormModal";
-import SignupFormPage from "./component/SignupFormPage";
+import SignupFormPage from "./component/SignupFormModal";
 import Navigation from "./component/Navigation";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -22,13 +22,10 @@ function App() {
     <>
      <Navigation isLoaded={isLoaded} />
     {isLoaded && (
-     <Switch>
-      <Route path="/signup">
-          <SignupFormPage />
-      </Route>
-    </Switch>
-    )
-}
+      <Switch>
+      </Switch>
+      )
+    }
     </>
   );
 }

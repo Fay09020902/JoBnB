@@ -8,16 +8,24 @@
 
 .signup-form {
     background: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 10px 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 750px;
+    text-align: center;
 }
 
 
 .signup-form label {
     display: block;
-    margin: 10px 0;
+    margin: 10px;
   }
 
  .signup-form input {
-    margin-left: 10px;
+    margin-right: 35px;
+    width: 100%;
  }
 
  .signup-form .error-message {
