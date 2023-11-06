@@ -1,9 +1,9 @@
-import LoginFormPage from "./component/LoginFormModal";
-import SignupFormPage from "./component/SignupFormModal";
 import Navigation from "./component/Navigation";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Switch } from "react-router-dom";
+import SportIndex from "./component/SpotIndex";
+import SpotDetail from "./component/SpotDetail";
 import * as sessionActions from "./store/session";
 
 function App() {
@@ -17,12 +17,17 @@ function App() {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
+
+
   return (
     <>
      <Navigation isLoaded={isLoaded} />
     {isLoaded && (
       <Switch>
+        <Route exact path="/spots" component={SportIndex} />
+        <Route exact path="/spots/:spotId" component={SpotDetail} />
       </Switch>
+
       )
     }
     </>

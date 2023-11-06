@@ -8,7 +8,7 @@ import SignupFormModal from '../SignupFormModal';
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef();
+  const ulRef = useRef(null);
 
   const openMenu = () => {
     if (showMenu) return;
@@ -19,7 +19,7 @@ function ProfileButton({ user }) {
     if (!showMenu) return;
 
     const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
+      if (ulRef.current && !ulRef.current.contains(e.target)) { // Check if ulRef.current exists
         setShowMenu(false);
       }
     };
@@ -44,6 +44,7 @@ function ProfileButton({ user }) {
       <button onClick={openMenu}>
         <i className="fas fa-user-circle" />
       </button>
+      {showMenu &&
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
@@ -68,7 +69,7 @@ function ProfileButton({ user }) {
             />
           </>
         )}
-      </ul>
+      </ul>}
     </>
   );
 }

@@ -1,0 +1,39 @@
+.spot-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+
+.spot-name {
+    visibility: hidden;
+    text-align: center;
+}
+
+
+.spot-tile {
+    position: relative;
+}
+
+.spot-name {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    /* bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s; */
+}
+
+  .spot-tile:hover .spot-name {
+    visibility: visible;
+    opacity: 1;
+  }

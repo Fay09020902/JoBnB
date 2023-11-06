@@ -1,0 +1,11 @@
+.index {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    /* align-items: center; */
+}
+.item {
+    margin: 15px;
+}

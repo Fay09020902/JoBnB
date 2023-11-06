@@ -1,0 +1,18 @@
+.spot-images {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    flex-wrap: wrap;
+}
+
+.spot-image-each {
+    margin: 15px;
+}
+
+
+.info-session {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    justify-content: space-around;
+}
