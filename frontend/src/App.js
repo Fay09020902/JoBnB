@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import SportIndex from "./component/SpotIndex";
 import SpotDetail from "./component/SpotDetail";
+import CreateSpotForm from "./component/CreateSpotForm";
 import * as sessionActions from "./store/session";
 
 function App() {
@@ -25,9 +26,9 @@ function App() {
     {isLoaded && (
       <Switch>
         <Route exact path="/spots" component={SportIndex} />
+        <Route exact path="/spots/new" component={CreateSpotForm} />
         <Route exact path="/spots/:spotId" component={SpotDetail} />
       </Switch>
-
       )
     }
     </>

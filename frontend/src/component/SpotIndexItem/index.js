@@ -7,7 +7,6 @@ import SportIdexItem from './SpotIndexItem.css'
 
 
 function SpotIndexItem({spot}) {
-
     return (
             <NavLink to={`/spots/${spot.id}`} className="spot-detail-link">
                 <div className="spot-tile">

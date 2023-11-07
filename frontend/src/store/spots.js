@@ -2,7 +2,7 @@ import { csrfFetch } from "./csrf";
 
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const CREATE_SPOT = 'spots/CREATE_SPOT';
-// const RECEIVE_SPOT = 'spots/RECEIVE_SPOT';
+const ADD_SPOTIMAGE = 'spots/ADD_SPOTIMAGE';
 
 /**  Action Creators: */
 export const loadSpots = (spots) => ({
@@ -15,6 +15,11 @@ export const createSpot = (spot) => ({
     spot,
 });
 
+export const addSpotImage = (images, id) => ({
+    type: ADD_SPOTIMAGE,
+    images,
+    id
+});
 
 
 
@@ -32,6 +37,7 @@ export const loadSpotsThunk = () => async (dispatch) => {
 
 
 export const createSpotsThunk = (payload) => async (dispatch) => {
+    console.log(payload)
     const response = await csrfFetch('/api/spots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -43,9 +49,7 @@ export const createSpotsThunk = (payload) => async (dispatch) => {
         return form;
       }
 }
-    //   else {
-    //     return response
-    //   }
+
 export const getSpotsDetailsThunk = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`)
     if (response.ok) {
@@ -55,6 +59,15 @@ export const getSpotsDetailsThunk = (spotId) => async (dispatch) => {
     }
 }
 
+
+export const addSpotImageThunk = (images, id) =>async (dispatch) => {
+    // const response = await csrfFetch(`/api/spots/${spotId}`)
+    // if (response.ok) {
+    //     const spot = await response.json();
+    //     dispatch(createSpot(spot));
+    //     return spot;
+    // }
+}
 
 const initialState = {}
 

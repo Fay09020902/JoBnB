@@ -19,9 +19,11 @@ function SpotDetail() {
         alert("Feature coming soon")
     }
 
+    if (!spot || !spot.Owner) {
+        return null;
+      }
+
     return (
-        <>
-        {spot && (
            <div className='spot-detail'>
                 <h2>{spot.name}</h2>
                 <div className='location'>
@@ -59,9 +61,6 @@ function SpotDetail() {
                    <div>Review Session</div>
                 </div>
             </div>
-            )
-        }
-        </>
     )
 }
 
