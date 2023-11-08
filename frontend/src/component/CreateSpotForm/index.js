@@ -80,7 +80,7 @@ function CreateSpotForm(){
         console.log("errs: ", err)
 
         setErrors(err);
-        console.log("err length", Object.values(err).length)
+       // console.log("err length", Object.values(err).length)
         //of no errors
         if(!Object.values(err).length) {
             try {

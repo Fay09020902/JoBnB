@@ -1,7 +1,7 @@
 // import { useEffect } from 'react';
 // import { useDispatch, useSelector} from "react-redux";
 import { NavLink} from 'react-router-dom';
-import SportIdexItem from './SpotIndexItem.css'
+import './SpotIndexItem.css'
 //import { createSpotsThunk, loadSpots } from '../../store/spots';
 
 

@@ -11,11 +11,11 @@ export const addSpotImage = (image, spotid) => ({
 
 
 export const addSpotImagesThunk = (images, spotid) =>async (dispatch) => {
-    console.log("addSpotImagesThunk runs")
-    console.log("iamges: ", images)
+    //console.log("addSpotImagesThunk runs")
+    //console.log("iamges: ", images)
     const uploadedImages = []
     for(let image of images) {
-        console.log("loop running for image: ", image)
+        //console.log("loop running for image: ", image)
         const {url, preview} = image
 
         const response = await csrfFetch(`/api/spots/${spotid}/images`, {
@@ -39,9 +39,9 @@ const spotImagesReducer = (state = initialState, action) => {
     let newState
     switch (action.type) {
         case LOAD_SPOTIMAGES:
-            const {url, preview, id} = action.image
+            const {url, preview} = action.image
             newState = Object.assign({}, state);
-            console.log("what is spots image in action: ", action)
+           // console.log("what is spots image in action: ", action)
             // console.log(action.spots.length)
             if(newState[action.spotid]) {
                 newState[action.spotid].push({url, preview})

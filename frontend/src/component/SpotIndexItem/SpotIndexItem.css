@@ -5,6 +5,9 @@
     margin-top: 10px;
 }
 
+.spot-item div {
+    margin:5px;
+}
 
 .spot-name {
     visibility: hidden;

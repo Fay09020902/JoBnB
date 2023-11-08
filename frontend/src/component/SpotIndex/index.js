@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector} from "react-redux";
 import { loadSpotsThunk } from '../../store/spots';
 import SpotIndexItem from '../SpotIndexItem';
-import SpotIndex from './SpotIndex.css';
+import './SpotIndex.css';
 
 function SportIndex() {
     const dispatch = useDispatch();

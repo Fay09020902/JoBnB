@@ -23,8 +23,10 @@ function App() {
   return (
     <>
      <Navigation isLoaded={isLoaded} />
+     <hr />
     {isLoaded && (
       <Switch>
+        <Route exact path="/" component={SportIndex} />
         <Route exact path="/spots" component={SportIndex} />
         <Route exact path="/spots/new" component={CreateSpotForm} />
         <Route exact path="/spots/:spotId" component={SpotDetail} />

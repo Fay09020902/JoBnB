@@ -2,7 +2,10 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector} from "react-redux";
 import { useParams} from 'react-router-dom';
 import {getSpotsDetailsThunk} from '../../store/spots'
-import SpotDetails from './SpotDetail.css';
+import OpenModalButton from '../OpenModalButton'
+import CreateReviewModal from '../CreateReviewModal'
+import SpotReviews from '../SpotReviews';
+import './SpotDetail.css';
 
 
 function SpotDetail() {
@@ -10,7 +13,7 @@ function SpotDetail() {
     const dispatch = useDispatch();
     const {spotId} = useParams()
     const spot = useSelector(state => state.spots[spotId]);
-
+    const session = useSelector(state => state.session)
     useEffect(() => {
         dispatch(getSpotsDetailsThunk(spotId))
     }, [dispatch])
@@ -22,7 +25,7 @@ function SpotDetail() {
     if (!spot || !spot.Owner) {
         return null;
       }
-
+     console.log("result:",   session.user)
     return (
            <div className='spot-detail'>
                 <h2>{spot.name}</h2>
@@ -50,15 +53,24 @@ function SpotDetail() {
                         <div>{spot.description}</div>
                     </div>
                     <div>
-                      {`$${spot.price}night`}  ⭐{spot.avgStarRating} #{spot.numReviews}
+                      {`$${spot.price}night`} ⭐{spot.avgStarRating}
+                      {spot.numReviews > 0 && <span> · #{spot.numReviews} </span>}
                       <div>
                       <button onClick={() => setAlert()}>Reserve</button>
                       </div>
                     </div>
                 </div>
+                <hr />
                 <div className='review-session'>
-                   <div>{`$${spot.price}night`}  ⭐{spot.avgStarRating} #{spot.numReviews}</div>
-                   <div>Review Session</div>
+                     <OpenModalButton
+                    buttonText="Post Your Review"
+                    modalComponent={<CreateReviewModal spotid={spotId}/>}
+                    />
+                   <div>⭐{spot.avgStarRating} #{spot.numReviews}</div>
+                   {!spot.numReviews && session.user && (session.id !== spot.Owner.id) && (
+                    <div>Be the first to post a review!</div>
+                   ) }
+                   <SpotReviews spotid={spotId}/>
                 </div>
             </div>
     )
