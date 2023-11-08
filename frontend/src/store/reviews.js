@@ -3,9 +3,9 @@ import { csrfFetch } from "./csrf";
 export const ADD_REVIEW = 'reviews/ADD_REVIEW';
 export const LOAD_REVIEW = 'reviews/LOAD_REVIEW'
 
-export const addSpotReview = (spotid) => ({
+export const addSpotReview = (review) => ({
     type: ADD_REVIEW,
-    spotid
+    review
 })
 
 export const loadSpotReview = (reviews) => ({
@@ -45,7 +45,7 @@ const reviewReducer = (state = initialState, action) => {
     let newState
     switch (action.type) {
         case ADD_REVIEW:
-            const {id, userId, spotId, review, stars} = action.payload
+            const {id, userId, spotId, review, stars} = action.review
             newState = Object.assign({}, state);
             return {
                 ...state,
@@ -53,7 +53,12 @@ const reviewReducer = (state = initialState, action) => {
             }
         case LOAD_REVIEW:
             // Handle fetching reviews and update the state
-            return { ...state, ...action.reviews };
+            newState = Object.assign({}, state);
+            console.log(action.reviews.Reviews)
+            action.reviews.Reviews.forEach((review) => {
+                newState[review.id] = review;
+              });
+              return newState
         default:
             return state;
     }

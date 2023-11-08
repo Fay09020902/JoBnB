@@ -14,6 +14,7 @@ function SpotDetail() {
     const {spotId} = useParams()
     const spot = useSelector(state => state.spots[spotId]);
     const session = useSelector(state => state.session)
+    const reviews = useSelector(state => state.reviews)
     useEffect(() => {
         dispatch(getSpotsDetailsThunk(spotId))
     }, [dispatch])
@@ -54,7 +55,8 @@ function SpotDetail() {
                     </div>
                     <div>
                       {`$${spot.price}night`} ⭐{spot.avgStarRating}
-                      {spot.numReviews > 0 && <span> · #{spot.numReviews} </span>}
+                      {spot.numReviews > 0 && <span> · #{spot.numReviews === 1 ?(<span>1 review</span>):(<span>{spot.numReviews} reviews</span>)} </span>
+                      }
                       <div>
                       <button onClick={() => setAlert()}>Reserve</button>
                       </div>
@@ -66,7 +68,7 @@ function SpotDetail() {
                     buttonText="Post Your Review"
                     modalComponent={<CreateReviewModal spotid={spotId}/>}
                     />
-                   <div>⭐{spot.avgStarRating} #{spot.numReviews}</div>
+                   <div>⭐{spot.avgStarRating} #{spot.numReviews} {spot.numReviews === 1 ?(<span>review</span>):(<span>reviews</span>)}</div>
                    {!spot.numReviews && session.user && (session.id !== spot.Owner.id) && (
                     <div>Be the first to post a review!</div>
                    ) }

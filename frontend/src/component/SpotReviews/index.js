@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector} from "react-redux";
 import {loadSpotReviewThunk} from '../../store/reviews'
 
@@ -6,20 +6,38 @@ import {loadSpotReviewThunk} from '../../store/reviews'
 function SpotReviews({spotid}) {
     console.log("SpotReviews runs")
     const dispatch = useDispatch();
-    // const spot = useSelector(state => state.spots[spotid]);
-    // const session = useSelector(state => state.session)
+    const [reviews, setReviews] = useState([]);
+    console.log("spot reviews: ", reviews)
+
     useEffect(() => {
-        const spotsreviews = dispatch(loadSpotReviewThunk(spotid))
-        console.log(spotsreviews)
+        console.log("useeffect for spotreview runs")
+        const loadReviews = async () => {
+            try {
+
+              const reviews = await dispatch(loadSpotReviewThunk(spotid));
+              const spotreviews = []
+              //console.log("review in useeffect:", reviews)
+              reviews.Reviews.forEach(element => {spotreviews.push(element)
+              });
+              setReviews(spotreviews)
+            } catch (error) {
+              console.error('Error loading reviews:', error);
+            }
+          };
+
+          loadReviews();
     }, [dispatch])
-    const fetchSpotReviews = async () => {
-        const reviews = await dispatch(loadSpotReviewThunk(spotid));
-        dispatch(loadSpotReviews(reviews));
-        setFetchedReviews(reviews);
-    };
-    fetchSpotReviews();
+
     return (
-        <></>
+        <>
+        {reviews && reviews.length > 0 && (
+            <ul>
+                {reviews.map(review => (
+                      <li key={review.id}>{review.review}</li>
+                ))}
+            </ul>
+        )}
+        </>
     )
 }
 

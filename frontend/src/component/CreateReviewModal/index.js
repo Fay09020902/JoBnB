@@ -23,6 +23,7 @@ function CreateReviewModal({spotid}) {
       setDisabled(true)
     }
   }, [review, stars])
+   console.log(errors)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,8 +32,8 @@ function CreateReviewModal({spotid}) {
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
-        if (data && data.message) {
-          setErrors(data.message);
+        if (data) {
+          setErrors({errs:{...data.errors}, message: data.message});
         }
       });
   };
@@ -44,12 +45,14 @@ function CreateReviewModal({spotid}) {
       <form onSubmit={handleSubmit} className="review-form">
         <label>
         How was your stay?
+        {errors.message && <p className="error-message">{errors.message}</p>}
           <textarea
             value={review}
             onChange={(e) => setReview(e.target.value)}
             required
           />
         </label>
+        {errors.errs && <p className="error-message">{errors.errs.review}</p>}
         <label>
           Stars
           <input
@@ -58,7 +61,7 @@ function CreateReviewModal({spotid}) {
             required
           />
         </label>
-        {{errors} && <p className="error-message">{Object.values(errors)}</p>}
+        {errors.errs && <p className="error-message">{errors.errs.stars}</p>}
         <button type="submit" disabled={disabled}>Submit Your Review</button>
       </form>
     </div>
