@@ -33,7 +33,7 @@ function SpotDetail() {
                     {spot.SpotImages &&
                     spot.SpotImages.map(image => {
                         return (
-                            <div className='spot-image-each'>
+                            <div className='spot-image-each' key={image.id}>
                                 <img
                                     className="spot-detail-image"
                                     alt={image.url}

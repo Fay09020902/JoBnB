@@ -2,6 +2,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector} from "react-redux";
 import { createSpotsThunk } from '../../store/spots';
+import { addSpotImagesThunk } from '../../store/spotimages'
 import CreateSpotForms from './CreateSpotForm.css'
 
 
@@ -36,17 +37,72 @@ function CreateSpotForm(){
     const updateLng = (e) => setLng(e.target.value);
 
 
-  
+    const isImageValid = (url) => {
+        const validExtensions = [".png", ".jpg", ".jpeg"];
+        const ext = url.split('.').pop();
+        return validExtensions.includes(`.${ext}`);
+      };
+
+    const pushToImageArray = (arr, image, err, imagename) => {
+        if (image) {
+            if (!isImageValid(image)) {
+              err[imagename] = 'Image URL must end in .png, .jpg, or .jpeg';
+            } else {
+                arr.push({ url: image, preview: false });
+            }
+          }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
         setSubmitted(true)
+        const err = {}
         const spot = { address, city, state, country, name, description, price, lat, lng }
-        const spotImages = [{previewImage, preview: true}]
-        if (image1) spotImages.push({ url: image1, preview: false });
-        if (image2) spotImages.push({ url: image2, preview: false });
-        if (image3) spotImages.push({ url: image3, preview: false });
-        if (image4) spotImages.push({ url: image4, preview: false });
+        const spotImages = [{url:previewImage, preview: true}]
+
+        if (!country) err.country = "Country is required";
+        if (!address) err.address = "Address is required";
+        if (!city) err.city = "City is required";
+        if (!state) err.state = "State is required";
+        if (!lat) err.lat = "Latitude is required";
+        if (!lng) err.lng = "Longitude is required";
+        if (description && description.length < 30)
+           err.description = "Description needs 30 or more characters";
+        if (!description) err.description = "Description is required";
+        if (!name) err.name = "Name is required";
+        if (!price) err.price = "Price is required";
+
+        pushToImageArray(spotImages, image1, err , 'image1')
+        pushToImageArray(spotImages, image2, err, 'image2')
+        pushToImageArray(spotImages, image3, err, 'image3')
+        pushToImageArray(spotImages, image4, err, 'image4')
+        console.log("errs: ", err)
+
+        setErrors(err);
+        console.log("err length", Object.values(err).length)
+        //of no errors
+        if(!Object.values(err).length) {
+            try {
+                const spot_response = await dispatch(createSpotsThunk(spot));
+                if (spot_response) {
+                    // dispatch(addSpotImagesThunk(spotImages, spot_response.id))
+                    // .then(history.push(`/spots/${spot_response.id}`))
+                    const uploadedImages = await dispatch(addSpotImagesThunk(spotImages, spot_response.id));
+
+                    // Check if the images were successfully uploaded
+                    if (uploadedImages) {
+                        history.push(`/spots/${spot_response.id}`);
+                }
+                }
+              } catch (error) {
+                  const data = await error.json();
+                  if (data && data.errors) {
+                    setErrors(data.errors);
+                  }
+              }
+        }
+
 
         // const spot_response = dispatch(createSpotsThunk(spot))
         //                     .catch(async (res) => {
@@ -59,17 +115,6 @@ function CreateSpotForm(){
         // if(spot_response) {
         //     history.push(`/spots/${spot_response.id}`);
         // }
-        try {
-            const spot_response = await dispatch(createSpotsThunk(spot));
-            if (spot_response) {
-              history.push(`/spots/${spot_response.id}`);
-            }
-          } catch (error) {
-              const data = await error.json();
-              if (data && data.errors) {
-                setErrors(data.errors);
-              }
-          }
     }
 
     return (
@@ -183,6 +228,7 @@ function CreateSpotForm(){
                 value={previewImage}
                 placeholder="Preview Image URL"
             />
+            <div className="errors">{errors && errors.previewImage}</div>
             <input
                 id="image1"
                 type="text"
@@ -190,6 +236,7 @@ function CreateSpotForm(){
                 value={image1}
                 placeholder="Image URL"
             />
+            <div className="errors">{errors && errors.image1}</div>
             <input
                 id="image2"
                 type="text"
@@ -197,6 +244,7 @@ function CreateSpotForm(){
                 value={image2}
                 placeholder="Image URL"
             />
+            <div className="errors">{errors && errors.image2}</div>
             <input
                 id="image3"
                 type="text"
@@ -204,6 +252,7 @@ function CreateSpotForm(){
                 value={image3}
                 placeholder="Image URL"
             />
+             <div className="errors">{errors && errors.image3}</div>
             <input
                 id="image4"
                 type="text"
@@ -211,6 +260,7 @@ function CreateSpotForm(){
                 value={image4}
                 placeholder="Image URL"
             />
+             <div className="errors">{errors && errors.image4}</div>
             </div>
             <hr />
            <button type="submit">Create a Spot</button>

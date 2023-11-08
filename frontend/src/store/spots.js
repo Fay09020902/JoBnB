@@ -1,8 +1,8 @@
 import { csrfFetch } from "./csrf";
+// import {LOAD_SPOTIMAGES} from './spotimages'
 
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const CREATE_SPOT = 'spots/CREATE_SPOT';
-const ADD_SPOTIMAGE = 'spots/ADD_SPOTIMAGE';
 
 /**  Action Creators: */
 export const loadSpots = (spots) => ({
@@ -15,14 +15,23 @@ export const createSpot = (spot) => ({
     spot,
 });
 
-export const addSpotImage = (images, id) => ({
-    type: ADD_SPOTIMAGE,
-    images,
-    id
-});
+// export const loadSpotImages = (id, images) => ({
+//     type: LOAD_SPOTIMAGES,
+//     id,
+//     images  //array [{url, preview}, ]
+//   });
 
 
+// export const addSpotImagesToState = (id, images) => async (dispatch) => {
+//     console.log("add iamges to spot state thunk runs")
 
+//     const response = await csrfFetch(`/api/spots/${id}`)
+//     if (response.ok) {
+//         const spot = await response.json();
+//         dispatch(loadSpotImages(id, spot.SpotImages));
+//         return spot;
+//     }
+// }
 
 export const loadSpotsThunk = () => async (dispatch) => {
     const response = await csrfFetch('/api/spots');
@@ -37,7 +46,7 @@ export const loadSpotsThunk = () => async (dispatch) => {
 
 
 export const createSpotsThunk = (payload) => async (dispatch) => {
-    console.log(payload)
+    //console.log(payload)
     const response = await csrfFetch('/api/spots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -60,14 +69,6 @@ export const getSpotsDetailsThunk = (spotId) => async (dispatch) => {
 }
 
 
-export const addSpotImageThunk = (images, id) =>async (dispatch) => {
-    // const response = await csrfFetch(`/api/spots/${spotId}`)
-    // if (response.ok) {
-    //     const spot = await response.json();
-    //     dispatch(createSpot(spot));
-    //     return spot;
-    // }
-}
 
 const initialState = {}
 
@@ -90,6 +91,14 @@ const spotReducer = (state = initialState, action) => {
             console.log("current payload: ", action.spot)
             newState[action.spot.id] = action.spot
             return newState
+        // case LOAD_SPOTIMAGES:
+        //     return {
+        //         ...state,
+        //         [action.id]: {
+        //             ...state[action.id],
+        //             SpotImages: action.images
+        //         }
+        //     }
         default:
             return state;
     }
