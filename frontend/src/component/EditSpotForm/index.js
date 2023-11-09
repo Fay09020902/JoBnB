@@ -1,13 +1,14 @@
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams  } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector} from "react-redux";
-import { createSpotsThunk } from '../../store/spots';
+import { updateSpotThunk } from '../../store/spots';
 import { addSpotImagesThunk } from '../../store/spotimages'
-import './CreateSpotForm.css'
+import './EditSpotForm.css'
 
 
-function CreateSpotForm(){
+function EditSpotForm(){
     const dispatch = useDispatch();
+    const {spotId} = useParams()
     const history = useHistory();
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
@@ -60,30 +61,28 @@ function CreateSpotForm(){
         const err = {}
         const spot = { address, city, state, country, name, description, price, lat, lng }
         const spotImages = [{url:previewImage, preview: true}]
-
         if (!country) err.country = "Country is required";
         if (!address) err.address = "Address is required";
         if (!city) err.city = "City is required";
         if (!state) err.state = "State is required";
-        if (!lat) err.lat = "Latitude is required";
-        if (!lng) err.lng = "Longitude is required";
+        if (!description) err.description = "Description is required";
+        if (!price) err.price = "Price is required";
         if (description && description.length < 30)
            err.description = "Description needs 30 or more characters";
-        if (!description) err.description = "Description is required";
-        if (!name) err.name = "Name is required";
-        if (!price) err.price = "Price is required";
-
+           if (name && name.length > 50)
+           err.description = "Name must be less than 50 characters";
         pushToImageArray(spotImages, image1, err , 'image1')
         pushToImageArray(spotImages, image2, err, 'image2')
         pushToImageArray(spotImages, image3, err, 'image3')
         pushToImageArray(spotImages, image4, err, 'image4')
+
 
         setErrors(err);
        // console.log("err length", Object.values(err).length)
         //of no errors
         if(!Object.values(err).length) {
             try {
-                const spot_response = await dispatch(createSpotsThunk(spot));
+                const spot_response = await dispatch(updateSpotThunk( spot, spotId ));
                 if (spot_response) {
                     // dispatch(addSpotImagesThunk(spotImages, spot_response.id))
                     // .then(history.push(`/spots/${spot_response.id}`))
@@ -101,24 +100,11 @@ function CreateSpotForm(){
                   }
               }
         }
-
-
-        // const spot_response = dispatch(createSpotsThunk(spot))
-        //                     .catch(async (res) => {
-        //                         const data = await res.json();
-        //                         if (data && data.errors) {
-        //                             setErrors(data.errors);
-        //                         }
-        //                     });
-
-        // if(spot_response) {
-        //     history.push(`/spots/${spot_response.id}`);
-        // }
     }
 
     return (
         <form onSubmit={handleSubmit} className='form-container'>
-            <h2>Create a new Spot</h2>
+            <h2>Update your Spot</h2>
             <div className='location'>
                 <h3>
                 Where's your place located? Guests will only get your exact address once they booked a reservation.
@@ -267,4 +253,4 @@ function CreateSpotForm(){
         );
 }
 
-export default CreateSpotForm;
+export default EditSpotForm;

@@ -16,8 +16,9 @@ function SpotDetail() {
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
     useEffect(() => {
+        console.log("useeffect for spotdetail runs")
         dispatch(getSpotsDetailsThunk(spotId))
-    }, [dispatch])
+    }, [dispatch, reviews])
 
     const setAlert = () => {
         alert("Feature coming soon")
@@ -26,7 +27,7 @@ function SpotDetail() {
     if (!spot || !spot.Owner) {
         return null;
       }
-     console.log("result:",   session.user)
+
     return (
            <div className='spot-detail'>
                 <h2>{spot.name}</h2>

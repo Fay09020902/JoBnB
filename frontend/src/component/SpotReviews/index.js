@@ -7,26 +7,32 @@ function SpotReviews({spotid}) {
     console.log("SpotReviews runs")
     const dispatch = useDispatch();
     const [reviews, setReviews] = useState([]);
-    console.log("spot reviews: ", reviews)
+    // console.log("spot reviews: ", reviews)
+    const reviewsSpot = useSelector(state => state.reviews)
 
-    useEffect(() => {
-        console.log("useeffect for spotreview runs")
-        const loadReviews = async () => {
-            try {
+    // useEffect(() => {
+    //     console.log("useeffect for spotreview runs")
+    //     const loadReviews = async () => {
+    //         try {
 
-              const reviews = await dispatch(loadSpotReviewThunk(spotid));
-              const spotreviews = []
-              //console.log("review in useeffect:", reviews)
-              reviews.Reviews.forEach(element => {spotreviews.push(element)
-              });
-              setReviews(spotreviews)
-            } catch (error) {
-              console.error('Error loading reviews:', error);
-            }
-          };
+    //           const reviews = await dispatch(loadSpotReviewThunk(spotid));
+    //           const spotreviews = []
+    //           //console.log("review in useeffect:", reviews)
+    //           reviews.Reviews.forEach(element => {spotreviews.push(element)
+    //           });
+    //           setReviews(spotreviews)
+    //         } catch (error) {
+    //           console.error('Error loading reviews:', error);
+    //         }
+    //       };
 
-          loadReviews();
-    }, [dispatch])
+    //       loadReviews();
+    // }, [])
+
+    useEffect(() =>{
+      console.log("useeffect for spotreview runs")
+
+    }, [])
 
     return (
         <>

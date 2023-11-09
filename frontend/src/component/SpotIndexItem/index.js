@@ -1,12 +1,13 @@
 // import { useEffect } from 'react';
 // import { useDispatch, useSelector} from "react-redux";
 import { NavLink} from 'react-router-dom';
+import EditSpotForm from '../EditSpotForm'
 import './SpotIndexItem.css'
 //import { createSpotsThunk, loadSpots } from '../../store/spots';
 
 
 
-function SpotIndexItem({spot}) {
+function SpotIndexItem({spot, isOwner}) {
     return (
             <NavLink to={`/spots/${spot.id}`} className="spot-detail-link">
                 <div className="spot-tile">
@@ -21,6 +22,12 @@ function SpotIndexItem({spot}) {
                         <div className="rating">{spot.avgRating ? spot.avgRating : "New"}</div>
                     </div>
                     <div>{`$${spot.price}night`}</div>
+                    {isOwner &&
+                        <div className="buttons-container">
+                       <NavLink to={`/spots/${spot.id}/edit`}>
+                        Update
+                      </NavLink>
+                      </div>}
                 </div>
             </NavLink>
     )

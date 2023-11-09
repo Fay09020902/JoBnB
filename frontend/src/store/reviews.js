@@ -46,19 +46,37 @@ const reviewReducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_REVIEW:
             const {id, userId, spotId, review, stars} = action.review
-            newState = Object.assign({}, state);
-            return {
-                ...state,
-                [id]: {userId, spotId, review, stars}
-            }
+            if (state[spotId]) {
+                // If it exists, add the new review to the existing reviews for that spot
+                return {
+                  ...state,
+                  [spotId]: {
+                    ...state[spotId],
+                    [id]: action.review,
+                  },
+                };
+              } else {
+                // If the spotId doesn't exist, create a new entry for that spot with the new review
+                return {
+                  ...state,
+                  [spotId]: {
+                    [id]: action.review,
+                  },
+                };
+              }
         case LOAD_REVIEW:
             // Handle fetching reviews and update the state
-            newState = Object.assign({}, state);
-            console.log(action.reviews.Reviews)
-            action.reviews.Reviews.forEach((review) => {
-                newState[review.id] = review;
-              });
-              return newState
+            console.log("console.log(action.reviews.Reviews)", action.reviews.Reviews)
+            return {
+                ...state,
+                [spotId]: action.reviews.Reviews
+            };
+            // newState = Object.assign({}, state);
+            // console.log(action.reviews.Reviews)
+            // action.reviews.Reviews.forEach((review) => {
+            //     newState[review.spotId] = review;
+            //   });
+            //   return newState
         default:
             return state;
     }
