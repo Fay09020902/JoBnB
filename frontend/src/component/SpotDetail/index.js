@@ -13,12 +13,13 @@ function SpotDetail() {
     const dispatch = useDispatch();
     const {spotId} = useParams()
     const spot = useSelector(state => state.spots[spotId]);
+    console.log("spots,", useSelector(state => state.spots))
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
     useEffect(() => {
-        console.log("useeffect for spotdetail runs")
+        //console.log("useeffect for spotdetail runs")
         dispatch(getSpotsDetailsThunk(spotId))
-    }, [dispatch, reviews])
+    }, [dispatch, reviews, spotId])
 
     const setAlert = () => {
         alert("Feature coming soon")
