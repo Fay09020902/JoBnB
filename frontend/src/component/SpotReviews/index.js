@@ -1,14 +1,34 @@
-import { useEffect, useState } from 'react';
+
+import { useEffect } from "react";
 import { useDispatch, useSelector} from "react-redux";
-import {loadSpotReviewThunk} from '../../store/reviews'
+import { loadSpotReviewThunk} from '../../store/reviews'
 
 
 function SpotReviews({spotid}) {
     console.log("SpotReviews runs")
     const dispatch = useDispatch();
-    const [reviews, setReviews] = useState([]);
-    // console.log("spot reviews: ", reviews)
-    const reviewsSpot = useSelector(state => state.reviews)
+    //const [reviews, setReviews] = useState([]);
+    //dosen't work for refresh, need to load spot review first
+    useEffect(() => {
+        console.log("useeffct for spotreview runs")
+        dispatch(loadSpotReviewThunk(spotid))
+   }, [dispatch])
+
+    let reviews
+    const spotReviews = useSelector(state => state.reviews[spotid])
+    if(!spotReviews) {
+        return <></>
+    } else {
+        reviews = Object.values(spotReviews)
+    }
+
+    const order = Object.keys(spotReviews)
+    .sort((a, b) => a - b)
+    // console.log(order)
+    // useEffect(() => {
+    //     setReviews(Object.values(reviewsSpot))
+    // }, [])
+
 
     // useEffect(() => {
     //     console.log("useeffect for spotreview runs")
@@ -29,20 +49,15 @@ function SpotReviews({spotid}) {
     //       loadReviews();
     // }, [])
 
-    useEffect(() =>{
-      console.log("useeffect for spotreview runs")
-
-    }, [])
-
     return (
         <>
-        {reviews && reviews.length > 0 && (
-            <ul>
-                {reviews.map(review => (
-                      <li key={review.id}>{review.review}</li>
-                ))}
-            </ul>
-        )}
+          {order && order.length > 0 && (
+                <ul>
+                    {order.map(reviewid => (
+                        <li key={reviewid}>{spotReviews[reviewid].review}</li>
+                    ))}
+                </ul>)
+         }
         </>
     )
 }

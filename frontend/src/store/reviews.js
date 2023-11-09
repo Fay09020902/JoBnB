@@ -5,12 +5,13 @@ export const LOAD_REVIEW = 'reviews/LOAD_REVIEW'
 
 export const addSpotReview = (review) => ({
     type: ADD_REVIEW,
-    review
+    review,
 })
 
-export const loadSpotReview = (reviews) => ({
+export const loadSpotReview = (reviews, spotId) => ({
     type: LOAD_REVIEW,
-    reviews ///array
+    reviews, ///array
+    spotId
 })
 
 export const addSpotReviewThunk = (review, stars, spotid) =>async (dispatch) => {
@@ -31,8 +32,8 @@ export const loadSpotReviewThunk = (spotid) => async (dispatch) => {
 
     if (response.ok) {
         const spotsreviews = await response.json();
-        console.log("backend spotsreviews: ", spotsreviews)
-        dispatch(loadSpotReview(spotsreviews));
+        //console.log("backend spotsreviews: ", spotsreviews)
+        dispatch(loadSpotReview(spotsreviews, spotid));
         return spotsreviews
     }
 };
@@ -42,10 +43,9 @@ export const loadSpotReviewThunk = (spotid) => async (dispatch) => {
 const initialState = {}
 
 const reviewReducer = (state = initialState, action) => {
-    let newState
     switch (action.type) {
         case ADD_REVIEW:
-            const {id, userId, spotId, review, stars} = action.review
+            const {id, spotId} = action.review
             if (state[spotId]) {
                 // If it exists, add the new review to the existing reviews for that spot
                 return {
@@ -66,10 +66,12 @@ const reviewReducer = (state = initialState, action) => {
               }
         case LOAD_REVIEW:
             // Handle fetching reviews and update the state
-            console.log("console.log(action.reviews.Reviews)", action.reviews.Reviews)
+            //console.log("console.log(action.reviews.Reviews)", action.reviews.Reviews)
+            const newState = {}
+            action.reviews.Reviews.forEach(review => newState[review.id] = review)
             return {
                 ...state,
-                [spotId]: action.reviews.Reviews
+                [action.spotId]: {...newState}
             };
             // newState = Object.assign({}, state);
             // console.log(action.reviews.Reviews)

@@ -6,5 +6,12 @@
 
 
   }
+/* 
 
-
+  {order && order.length > 0 && (
+    <ul>
+        {order.map(reviewid => (
+              <li key={reviewid}>{spotReviews[reviewid].review}</li>
+        ))}
+    </ul>
+)} */
