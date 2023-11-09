@@ -3,7 +3,7 @@ import { csrfFetch } from "./csrf";
 
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const CREATE_SPOT = 'spots/CREATE_SPOT';
-const LOAD_SESSIONSPOT = 'spots/LOAD_SESSIONSPOT';
+//const LOAD_SESSIONSPOT = 'spots/LOAD_SESSIONSPOT';
 
 
 /**  Action Creators: */
