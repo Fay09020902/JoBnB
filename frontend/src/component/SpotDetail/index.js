@@ -43,7 +43,6 @@ function SpotDetail() {
                                 <img
                                     className="spot-detail-image"
                                     alt={image.url}
-                                    key={image.id}
                                     src={`${image.previewImage}`}
                                 />
                             </div>

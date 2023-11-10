@@ -54,7 +54,7 @@ function SpotReviews({spotid}) {
           {order && order.length > 0 && (
                 <ul>
                     {order.map(reviewid => (
-                        <li key={reviewid}>{spotReviews[reviewid].review}</li>
+                        <li key={reviewid}><div>{spotReviews[reviewid].User.firstName}</div><div>{spotReviews[reviewid].review}</div></li>
                     ))}
                 </ul>)
          }

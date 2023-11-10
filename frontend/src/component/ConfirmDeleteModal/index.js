@@ -3,10 +3,9 @@ import * as reviewActions from "../../store/reviews";
 import { useDispatch} from "react-redux";
 import { useParams} from 'react-router-dom';
 import { useModal } from "../../context/Modal";
-import './CreateReviewModal.css'
 
 
-function CreateReviewModal({spotid}) {
+function ConfirmDeleteModa({spotid}) {
   const dispatch = useDispatch();
   const [review, setReview] = useState("");
   const [stars, setStars] = useState("");
@@ -41,9 +40,10 @@ function CreateReviewModal({spotid}) {
 
   return (
     <div className ='form-container'>
-      <h1>How was your stay</h1>
+      <h1>Confirm Delete</h1>
       <form onSubmit={handleSubmit} className="review-form">
         <label>
+        Are you sure you want to remove this spot from the listings?
         {errors.message && <p className="error-message">{errors.message}</p>}
           <textarea
             value={review}
@@ -67,4 +67,4 @@ function CreateReviewModal({spotid}) {
   );
 }
 
-export default CreateReviewModal;
+export default ConfirmDeleteModa;

@@ -8,13 +8,15 @@ import './SpotIndexItem.css'
 
 
 function SpotIndexItem({spot, isOwner}) {
-    return (
-            <NavLink to={`/spots/${spot.id}`} className="spot-detail-link">
+
+    console.log("spotidexItem runs")
+    console.log("spot:", spot);
+    return spot ? (
+         <NavLink to={`/spots/${spot.id}`} className="spot-detail-link">
                 <div className="spot-tile">
                     <div className="spot-name">{spot.name}</div>
                     <img
                         className="spot-entry-image"
-                        alt={spot.imageUrl}
                         src={`${spot.previewImage}`}
                     />
                     <div className="spot-item">
@@ -30,7 +32,7 @@ function SpotIndexItem({spot, isOwner}) {
                       </div>}
                 </div>
             </NavLink>
-    )
+    ): null;
 }
 
 export default SpotIndexItem;
