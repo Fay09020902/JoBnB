@@ -5,9 +5,10 @@ export const LOAD_REVIEW = 'reviews/LOAD_REVIEW'
 export const LOAD_SESSIONREVIEW = 'spots/LOAD_SESSIONREVIEW';
 const DELETE_REVIEW = "review/delete";
 
-export const addSpotReview = (review) => ({
+export const addSpotReview = (review, session) => ({
     type: ADD_REVIEW,
     review,
+    session
 })
 
 export const loadSpotReview = (reviews, spotId) => ({
@@ -30,7 +31,7 @@ const deleteReview = (reviewid,spotid) => {
   };
 };
 
-export const addSpotReviewThunk = (review, stars, spotid) =>async (dispatch) => {
+export const addSpotReviewThunk = (review, stars, spotid, session) =>async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotid}/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,7 +39,7 @@ export const addSpotReviewThunk = (review, stars, spotid) =>async (dispatch) => 
       });
       if (response.ok) {
         const review = await response.json();
-        dispatch(addSpotReview(review));
+        dispatch(addSpotReview(review, session));
         return review;
       }
 }
@@ -92,7 +93,7 @@ const reviewReducer = (state = initialState, action) => {
                   ...state,
                   [spotId]: {
                     ...state[spotId],
-                    [id]: action.review,
+                    [id]: {User:{...action.session.user}, ...action.review},
                   },
                 };
               } else {
@@ -100,7 +101,7 @@ const reviewReducer = (state = initialState, action) => {
                 return {
                   ...state,
                   [spotId]: {
-                    [id]: action.review,
+                    [id]: {User:{...action.session.user}, ...action.review},
                   },
                 };
               }

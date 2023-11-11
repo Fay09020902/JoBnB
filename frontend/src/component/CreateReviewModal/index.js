@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import * as reviewActions from "../../store/reviews";
-import { useDispatch} from "react-redux";
-import { useParams} from 'react-router-dom';
+import { useDispatch, useSelector} from "react-redux";
 import { useModal } from "../../context/Modal";
 import './CreateReviewModal.css'
 
 
 function CreateReviewModal({spotid}) {
   const dispatch = useDispatch();
+  const session = useSelector(state => state.session)
   const [review, setReview] = useState("");
   const [stars, setStars] = useState("");
   const [disabled, setDisabled] = useState(true)
@@ -28,7 +28,7 @@ function CreateReviewModal({spotid}) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(reviewActions.addSpotReviewThunk( review, stars, spotid ))
+    return dispatch(reviewActions.addSpotReviewThunk( review, stars, spotid, session ))
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
