@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const CREATE_SPOT = 'spots/CREATE_SPOT';
+const DELETE_SPOT = 'spots/DELETE_SPOT'
 //const LOAD_SESSIONSPOT = 'spots/LOAD_SESSIONSPOT';
 
 
@@ -12,11 +13,15 @@ export const loadSpots = (spots) => ({
     spots,
   });
 
-export const createSpot = (spot) => ({
+  export const createSpot = (spot) => ({
     type: CREATE_SPOT,
     spot,
-});
+})
 
+export const deleteSpot = (spotId) => ({
+    type: DELETE_SPOT,
+    spotId,
+});
 // export const loadSessionSpot = (spot) => ({
 //     type: LOAD_SPOTS,
 //     spot,
@@ -70,6 +75,7 @@ export const getSpotsDetailsThunk = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`)
     if (response.ok) {
         const spot = await response.json();
+        console.log("spot in backend", spot)
         dispatch(createSpot(spot));
         return spot;
     }
@@ -102,6 +108,21 @@ export const loadSessionSpotsThunk = () => async (dispatch) => {
 };
 
 
+export const deleteSpotThunk = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      dispatch(deleteSpot(spotId));
+      return data;
+    } else {
+      const error = await response.json();
+      return error;
+    }
+  };
+
 const initialState = {}
 
 const spotReducer = (state = initialState, action) => {
@@ -121,6 +142,10 @@ const spotReducer = (state = initialState, action) => {
             console.log("current payload: ", action.spot)
             newState[action.spot.id] = action.spot
             return newState
+        case DELETE_SPOT:
+            const allSpots = { ...state };
+            delete allSpots[action.spotId];
+            return allSpots;
         // case LOAD_SPOTIMAGES:
         //     return {
         //         ...state,

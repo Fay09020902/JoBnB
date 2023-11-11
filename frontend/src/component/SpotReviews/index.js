@@ -1,18 +1,46 @@
 
-import { useEffect } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { loadSpotReviewThunk} from '../../store/reviews'
-
+import ConfirmReviewDeleteModal from '../ConfirmReviewDeleteModal'
+import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
+import React, { useState, useEffect, useRef } from "react";
 
 function SpotReviews({spotid}) {
     console.log("SpotReviews runs")
     const dispatch = useDispatch();
     //const [reviews, setReviews] = useState([]);
     //dosen't work for refresh, need to load spot review first
+
+    const [showMenu, setShowMenu] = useState(false);
+    const ulRef = useRef(null);
+
+    const openMenu = () => {
+      if (showMenu) return;
+      setShowMenu(true);
+    };
+
+    useEffect(() => {
+
+      if (!showMenu) return;
+
+      const closeMenu = (e) => {
+        if (ulRef.current && !ulRef.current.contains(e.target)) { // Check if ulRef.current exists
+          setShowMenu(false);
+        }
+      };
+
+      document.addEventListener('click', closeMenu);
+
+      return () => document.removeEventListener("click", closeMenu);
+    }, [showMenu]);
+
+    const closeMenu = () => setShowMenu(false);
+
     useEffect(() => {
         console.log("useeffct for spotreview runs")
         dispatch(loadSpotReviewThunk(spotid))
    }, [dispatch])
+
 
     let reviews
     const spotReviews = useSelector(state => state.reviews[spotid])
@@ -54,7 +82,16 @@ function SpotReviews({spotid}) {
           {order && order.length > 0 && (
                 <ul>
                     {order.map(reviewid => (
-                        <li key={reviewid}><div>{spotReviews[reviewid].User.firstName}</div><div>{spotReviews[reviewid].review}</div></li>
+                        <li key={reviewid}>
+                            <div>{spotReviews[reviewid].User.firstName}</div>
+                            <div>{spotReviews[reviewid].review}</div>
+                            <OpenModalMenuItem
+                            itemText="Delete"
+                            onItemClick={closeMenu}
+                            modalComponent={  <ConfirmReviewDeleteModal spotid = {spotid} reviewid={reviewid}/>}
+                            />
+                        </li>
+
                     ))}
                 </ul>)
          }
