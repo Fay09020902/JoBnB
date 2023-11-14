@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import ConfirmReviewDeleteModal from '../ConfirmReviewDeleteModal'
+import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { loadSessionReviewsThunk } from '../../store/reviews';
 
@@ -6,6 +8,31 @@ import { loadSessionReviewsThunk } from '../../store/reviews';
 function SessionReview() {
     console.log("session review component runs")
     const dispatch = useDispatch();
+
+    const [showMenu, setShowMenu] = useState(false);
+    const ulRef = useRef(null);
+
+    const openMenu = () => {
+      if (showMenu) return;
+      setShowMenu(true);
+    };
+
+    useEffect(() => {
+
+      if (!showMenu) return;
+
+      const closeMenu = (e) => {
+        if (ulRef.current && !ulRef.current.contains(e.target)) { // Check if ulRef.current exists
+          setShowMenu(false);
+        }
+      };
+
+      document.addEventListener('click', closeMenu);
+
+      return () => document.removeEventListener("click", closeMenu);
+    }, [showMenu]);
+
+    const closeMenu = () => setShowMenu(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,22 +55,32 @@ function SessionReview() {
     Object.values(allReviews).forEach((review) => {
         Object.values(review).forEach(ele => {
             if(ele.userId === user.id) {
-                userSessions.push(ele.review)
+                userSessions.push(ele)
             }
         })
     })
 
 
+
    if (!userSessions.length) return <div>No Session Reviews</div>;
 
     return (
-        <div className="index">
-            <ul>
+        <div className="manage-reviews">
+            <div className="index">
+                <ul>
                 {userSessions.map(ele => (
-                    <li key={ele}>{ele}</li>
-                ))}
-
-            </ul>
+                <div key={ele.id}>
+                    <li>{ele.review}</li>
+                    {console.log("current ele:", ele)}
+                    <OpenModalMenuItem
+                        itemText="Delete"
+                        onItemClick={closeMenu}
+                        modalComponent={<ConfirmReviewDeleteModal spotid={ele.spotId} reviewid={ele.id} />}
+                    />
+                </div>
+          ))}
+                </ul>
+            </div>
         </div>
     )
 }

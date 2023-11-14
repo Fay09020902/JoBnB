@@ -10,7 +10,7 @@ function SpotReviews({spotid}) {
     const dispatch = useDispatch();
     //const [reviews, setReviews] = useState([]);
     //dosen't work for refresh, need to load spot review first
-
+    const user = useSelector(state => state.session.user)
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef(null);
 
@@ -85,13 +85,12 @@ function SpotReviews({spotid}) {
                         <li key={reviewid}>
                             <div>{spotReviews[reviewid].User.firstName}</div>
                             <div>{spotReviews[reviewid].review}</div>
-                            <OpenModalMenuItem
+                            {spotReviews[reviewid].userId === user.id && <OpenModalMenuItem
                             itemText="Delete"
                             onItemClick={closeMenu}
                             modalComponent={  <ConfirmReviewDeleteModal spotid = {spotid} reviewid={reviewid}/>}
-                            />
+                            />}
                         </li>
-
                     ))}
                 </ul>)
          }

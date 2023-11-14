@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 export const ADD_REVIEW = 'reviews/ADD_REVIEW';
 export const LOAD_REVIEW = 'reviews/LOAD_REVIEW'
 export const LOAD_SESSIONREVIEW = 'spots/LOAD_SESSIONREVIEW';
+export const UPDATE_REVIEW = 'reviews/UPDATE_REVIEW'
 const DELETE_REVIEW = "review/delete";
 
 export const addSpotReview = (review, session) => ({
@@ -17,6 +18,12 @@ export const loadSpotReview = (reviews, spotId) => ({
     spotId
 })
 
+
+export const updateReview = (review, spotId) => ({
+  type: UPDATE_REVIEW,
+  review, ///array
+  spotId
+})
 
 export const loadSessionReview = (reviews) => ({
     type: LOAD_SESSIONREVIEW,
@@ -80,6 +87,21 @@ export const deleteReviewThunk = (reviewid,spotid) => async (dispatch) => {
     return errors;
   }
 };
+
+
+
+// export const updateSpotReviewThunk = (review, stars, spotid, session) =>async (dispatch) => {
+//   const response = await csrfFetch(`/api/reviews/${}`, {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({review, stars})
+//     });
+//     if (response.ok) {
+//       const review = await response.json();
+//       dispatch(addSpotReview(review, session));
+//       return review;
+//     }
+// }
 
 const initialState = {}
 
