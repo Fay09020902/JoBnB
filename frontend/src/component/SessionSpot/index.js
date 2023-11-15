@@ -5,7 +5,7 @@ import SpotIndexItem from '../SpotIndexItem';
 import { useHistory } from "react-router-dom";
 
 function SessionSpot() {
-    console.log("session spot component runs")
+    //console.log("session spot component runs")
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -15,7 +15,7 @@ function SessionSpot() {
                 await dispatch(loadSessionSpotsThunk(user.id));
             } catch (error) {
                 const data = await error.json();
-                console.error('Error fetching data:', data);
+                //console.error('Error fetching data:', data);
             }
         };
         fetchData();

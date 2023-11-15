@@ -23,7 +23,6 @@ function CreateReviewModal({spotid}) {
       setDisabled(true)
     }
   }, [review, stars])
-   console.log(errors)
 
   const handleSubmit = (e) => {
     e.preventDefault();

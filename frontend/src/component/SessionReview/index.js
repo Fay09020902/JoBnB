@@ -53,7 +53,6 @@ function SessionReview() {
                 //console.log("userreviews; " ,userReviews)
             } catch (error) {
                 const data = await error.json();
-                console.error('Error fetching data:', data);
             }
         };
         fetchData();
@@ -73,7 +72,6 @@ function SessionReview() {
                 {userSessions.map(ele => (
                 <div key={ele.id}>
                     <li>{ele.review}
-                    {console.log("current ele:", ele)}
                     <OpenModalMenuItem
                         itemText="Delete"
                         onItemClick={closeMenu}
