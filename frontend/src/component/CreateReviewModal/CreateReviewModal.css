@@ -1,0 +1,40 @@
+.review-form {
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 5px 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* width: 750px; */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Style the form elements */
+  .review-form label {
+    display: block;
+    margin: 10px 0;
+  }
+
+  .review-form input {
+    width: 100%;
+    padding: 0px;
+    margin: 5px 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  /* Style the error message */
+  .login-form .error-message {
+    color: #f00;
+  }
+
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   
+  }

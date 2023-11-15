@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
+
+import { NavLink, useHistory} from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
@@ -7,8 +9,9 @@ import SignupFormModal from '../SignupFormModal';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef();
+  const ulRef = useRef(null);
 
   const openMenu = () => {
     if (showMenu) return;
@@ -19,7 +22,7 @@ function ProfileButton({ user }) {
     if (!showMenu) return;
 
     const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
+      if (ulRef.current && !ulRef.current.contains(e.target)) { // Check if ulRef.current exists
         setShowMenu(false);
       }
     };
@@ -33,8 +36,9 @@ function ProfileButton({ user }) {
 
   const logout = (e) => {
     e.preventDefault();
-    dispatch(sessionActions.logout());
-    closeMenu();
+    dispatch(sessionActions.logout())
+      history.push("/");
+      closeMenu();
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -44,12 +48,14 @@ function ProfileButton({ user }) {
       <button onClick={openMenu}>
         <i className="fas fa-user-circle" />
       </button>
+      {showMenu &&
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            <li>{`Hello, ${user.firstName}.`}</li>
             <li>{user.email}</li>
+            <li><NavLink to={'/spots/current'}>Manage Spots</NavLink></li>
+            <li><NavLink to={'/reviews/current'}>Manage Reviews</NavLink></li>
             <li>
               <button onClick={logout}>Log Out</button>
             </li>
@@ -68,7 +74,7 @@ function ProfileButton({ user }) {
             />
           </>
         )}
-      </ul>
+      </ul>}
     </>
   );
 }

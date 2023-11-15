@@ -28,6 +28,6 @@
     width: 100%;
  }
 
- .signup-form .error-message {
+ .errors {
     color: #f00;
   }

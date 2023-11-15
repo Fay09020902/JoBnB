@@ -1,0 +1,39 @@
+.nav-list {
+list-style: none;
+margin: 0;
+display: flex;
+justify-content: space-between;
+}
+
+
+.nav-list li {
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+
+.nav-list a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #333; /* Set the color of the text */
+  }
+
+
+.logo {
+    height: 40px; /* Adjust the height as needed */
+    width: auto; /* Keeps the aspect ratio */
+    padding: 2px;
+  }
+
+  .logo-li {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-list .profile .create-spot-form-link {
+    margin-right: 20px; /* Adjust the space as needed */
+  }
+
+  .nav-list a:hover {
+    color: brown;
+  }

@@ -1,20 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as sessionActions from "../../store/session";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useDispatch} from "react-redux";
 import { useModal } from "../../context/Modal";
+import { useHistory } from 'react-router-dom';
 import "./LoginForm.css";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
-  const sessionUser = useSelector((state) => state.session.user);
+  const history = useHistory();
+  // const sessionUser = useSelector((state) => state.session.user);
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
+  const [disabled, setDisabled] = useState(true)
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
-  //if (sessionUser) return <Redirect to="/" />;
 
+
+  // if( credential.length >= 4 && password.length >= 6) {
+  //   console.log("invalid input")
+  //   console.log("now: ", disabled)
+  //   setDisabled(prev => {console.log("prev:", prev); console.log(prev === disabled); return false})
+  // }
+
+  useEffect(() => {
+    if( credential.length >= 4 && password.length >= 6) {
+      setDisabled(false)
+    }
+    else {
+      setDisabled(true)
+    }
+  }, [credential, password])
+
+  const demoLogin = () => {
+    dispatch(sessionActions.login({credential: "demo@user.io", password: "password" }));
+    closeModal();
+    history.push("/");
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -53,8 +75,9 @@ function LoginFormModal() {
           />
         </label>
         {{errors} && <p className="error-message">{Object.values(errors)}</p>}
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={disabled}>Log In</button>
       </form>
+      <button onClick={demoLogin}>Log In As Demo User</button>
     </div>
   );
 }
