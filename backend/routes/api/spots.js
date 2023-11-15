@@ -266,7 +266,6 @@ router.post("/:spotId/images",
             requireAuth,
             async (req, res, next) => {
                 let { url, preview } = req.body;
-                console.log("req body in backend", req.body)
                 const spotId = Number(req.params.spotId);
                 const { user } = req;
                 const currSpot = await Spot.findByPk(spotId);

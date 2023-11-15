@@ -9,11 +9,10 @@ import './SpotDetail.css';
 
 
 function SpotDetail() {
-    console.log("spotdetail runs")
+    //console.log("spotdetail runs")
     const dispatch = useDispatch();
     const {spotId} = useParams()
     const spot = useSelector(state => state.spots[spotId]);
-    console.log("spot: ", spot)
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
     const [isLoaded, setIsLoaded] = useState(false);

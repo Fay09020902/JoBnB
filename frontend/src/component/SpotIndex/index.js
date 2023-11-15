@@ -5,7 +5,7 @@ import SpotIndexItem from '../SpotIndexItem';
 import './SpotIndex.css';
 
 function SportIndex() {
-    console.log("spotidex runs")
+    //console.log("spotidex runs")
     const dispatch = useDispatch();
 
     const allSpots = useSelector(state => state.spots)

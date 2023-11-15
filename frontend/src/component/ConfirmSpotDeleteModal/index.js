@@ -5,7 +5,7 @@ import {deleteSpotThunk} from '../../store/spots'
 
 
 function ConfirmSpotDeleteModal({spot}) {
-  console.log("delete spot modal runs")
+  //console.log("delete spot modal runs")
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 

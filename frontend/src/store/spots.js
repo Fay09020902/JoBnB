@@ -139,7 +139,6 @@ const spotReducer = (state = initialState, action) => {
             return newState;
         case CREATE_SPOT:
             newState = {...state}
-            console.log("current payload: ", action.spot)
             newState[action.spot.id] = action.spot
             return newState
         case DELETE_SPOT:

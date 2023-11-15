@@ -7,7 +7,7 @@ import React, { useState, useEffect, useRef } from "react";
 import './SpotReviews.css'
 
 function SpotReviews({spotid}) {
-    console.log("SpotReviews runs")
+    //console.log("SpotReviews runs")
     const dispatch = useDispatch();
     //const [reviews, setReviews] = useState([]);
     //dosen't work for refresh, need to load spot review first
@@ -38,7 +38,6 @@ function SpotReviews({spotid}) {
     const closeMenu = () => setShowMenu(false);
 
     useEffect(() => {
-        console.log("useeffct for spotreview runs")
         dispatch(loadSpotReviewThunk(spotid))
    }, [dispatch])
 

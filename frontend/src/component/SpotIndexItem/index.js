@@ -13,8 +13,7 @@ import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 
 function SpotIndexItem({spot, isOwner}) {
 
-    console.log("spotidexItem runs")
-    console.log("spot:", spot);
+    //console.log("spotidexItem runs")
     const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef(null);
