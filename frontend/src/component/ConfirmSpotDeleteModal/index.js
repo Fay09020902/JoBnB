@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import * as reviewActions from "../../store/reviews";
 import { useDispatch} from "react-redux";
-import { useParams} from 'react-router-dom';
 import { useModal } from "../../context/Modal";
-import {deleteReviewThunk} from '../../store/reviews'
+import {deleteSpotThunk} from '../../store/spots'
 
 
 function ConfirmSpotDeleteModal({spot}) {
+  console.log("delete spot modal runs")
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 
@@ -23,7 +22,7 @@ function ConfirmSpotDeleteModal({spot}) {
 
   const handleDelete = (e) => {
     if(e.target.value === 'Yes'){
-      return dispatch(deleteReviewThunk( spot.id ))
+      return dispatch(deleteSpotThunk( spot.id ))
       .then(closeModal)
     } else {
       dispatch(closeModal)

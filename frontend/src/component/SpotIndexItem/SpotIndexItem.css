@@ -36,6 +36,13 @@
     transition: opacity 0.3s; */
 }
 
+img {
+        max-width: 100%; /* Ensure the image does not exceed the container width */
+        height: auto; /* Maintain the image's aspect ratio */
+        display: block; /* Remove extra spacing below inline images */
+        margin: 0 auto; /* Center the image within its container */
+}
+
   .spot-tile:hover .spot-name {
     visibility: visible;
     opacity: 1;

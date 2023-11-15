@@ -4,6 +4,7 @@ import { loadSpotReviewThunk} from '../../store/reviews'
 import ConfirmReviewDeleteModal from '../ConfirmReviewDeleteModal'
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 import React, { useState, useEffect, useRef } from "react";
+import './SpotReviews.css'
 
 function SpotReviews({spotid}) {
     console.log("SpotReviews runs")
@@ -85,7 +86,7 @@ function SpotReviews({spotid}) {
                         <li key={reviewid}>
                             <div>{spotReviews[reviewid].User.firstName}</div>
                             <div>{spotReviews[reviewid].review}</div>
-                            {spotReviews[reviewid].userId === user.id && <OpenModalMenuItem
+                            {user && spotReviews[reviewid].userId === user.id && <OpenModalMenuItem
                             itemText="Delete"
                             onItemClick={closeMenu}
                             modalComponent={  <ConfirmReviewDeleteModal spotid = {spotid} reviewid={reviewid}/>}

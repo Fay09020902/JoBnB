@@ -13,11 +13,10 @@ function SpotDetail() {
     const dispatch = useDispatch();
     const {spotId} = useParams()
     const spot = useSelector(state => state.spots[spotId]);
-    console.log("spots,", useSelector(state => state.spots))
+    console.log("spot: ", spot)
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
     useEffect(() => {
-        //console.log("useeffect for spotdetail runs")
         dispatch(getSpotsDetailsThunk(spotId))
     }, [dispatch, reviews, spotId])
 
@@ -25,10 +24,20 @@ function SpotDetail() {
         alert("Feature coming soon")
     }
 
+    const hidePostReview = () => {
+        const spotReviews = reviews[spotId]
+        console.log("spot reviews", spotReviews)
+        if(!spotReviews) {
+            return false
+        } else {
+        return Object.values(spotReviews).some((review) => {
+            return review.userId === session.user.id;
+        })}
+    };
+
     if (!spot || !spot.Owner) {
         return null;
       }
-
     return (
            <div className='spot-detail'>
                 <h2>{spot.name}</h2>
@@ -54,10 +63,11 @@ function SpotDetail() {
                         <div>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</div>
                         <div>{spot.description}</div>
                     </div>
-                    <div>
-                      {`$${spot.price}night`} ⭐{spot.avgStarRating}
+                    <div className='pricing-section'>
+                      <>{`$${spot.price}night`} ⭐{spot.avgStarRating}
                       {spot.numReviews > 0 && <span> · #{spot.numReviews === 1 ?(<span>1 review</span>):(<span>{spot.numReviews} reviews</span>)} </span>
                       }
+                      </>
                       <div>
                       <button onClick={() => setAlert()}>Reserve</button>
                       </div>
@@ -65,14 +75,18 @@ function SpotDetail() {
                 </div>
                 <hr />
                 <div className='review-session'>
-                     <OpenModalButton
-                    buttonText="Post Your Review"
-                    modalComponent={<CreateReviewModal spotid={spotId}/>}
-                    />
-                   <div>⭐{spot.avgStarRating} #{spot.numReviews} {spot.numReviews === 1 ?(<span>review</span>):(<span>reviews</span>)}</div>
-                   {!spot.numReviews && session.user && (session.id !== spot.Owner.id) && (
-                    <div>Be the first to post a review!</div>
-                   ) }
+                <div>⭐{spot.avgStarRating} #{spot.numReviews} {spot.numReviews === 1 ?(<span>review</span>):(<span>reviews</span>)}</div>
+                    {session.user && (session.user.id !== spot.ownerId)  && !hidePostReview() &&
+                        (<div>
+                        <OpenModalButton
+                        buttonText="Post Your Review"
+                        modalComponent={<CreateReviewModal spotid={spotId}/>}
+                        />
+                        {!spot.numReviews && (
+                            <div>Be the first to post a review!</div>
+                        ) }
+                   </div>)
+                    }
                    <SpotReviews spotid={spotId}/>
                 </div>
             </div>

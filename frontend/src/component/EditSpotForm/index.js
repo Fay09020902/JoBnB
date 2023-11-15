@@ -10,20 +10,22 @@ function EditSpotForm(){
     const dispatch = useDispatch();
     const {spotId} = useParams()
     const history = useHistory();
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [country, setCountry] = useState('');
-    const [lat, setLat] = useState('');
-    const [lng, setLng] = useState('');
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState(0);
-    const [previewImage, setPreviewImage] = useState("");
-    const [image1, setImage1] = useState("");
-    const [image2, setImage2] = useState("");
-    const [image3, setImage3] = useState("");
-    const [image4, setImage4] = useState("");
+    const spot = useSelector(state => state.spots[spotId]);
+
+    const [address, setAddress] = useState(spot.address);
+    const [city, setCity] = useState(spot.city);
+    const [state, setState] = useState(spot.state);
+    const [country, setCountry] = useState(spot.country);
+    const [lat, setLat] = useState(spot.lat);
+    const [lng, setLng] = useState(spot.lng);
+    const [name, setName] = useState(spot.name);
+    const [description, setDescription] = useState(spot.name);
+    const [price, setPrice] = useState(spot.price);
+    const [previewImage, setPreviewImage] = useState(spot.previewImage);
+    const [image1, setImage1] = useState(spot.image1 ? spot.image1 : '');
+    const [image2, setImage2] = useState(spot.image2 ? spot.image2 : '');
+    const [image3, setImage3] = useState(spot.image3 ? spot.image3 : '');
+    const [image4, setImage4] = useState(spot.image4 ? spot.image4 : '');
     const [submitted, setSubmitted] = useState(false)
     const [errors, setErrors] = useState({});
 
@@ -103,7 +105,7 @@ function EditSpotForm(){
     }
 
     return (
-        <form onSubmit={handleSubmit} className='form-container'>
+        <form onSubmit={handleSubmit} className='editform-container'>
             <h2>Update your Spot</h2>
             <div className='location'>
                 <h3>

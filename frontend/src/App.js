@@ -25,22 +25,20 @@ function App() {
 
   return (
     <div className="app">
-     <Navigation isLoaded={isLoaded} />
-     <hr />
-     <div className="route-container ">
-    {isLoaded && (
-      <Switch>
-        <Route exact path="/" component={SportIndex} className="SportIndex" />
-        <Route exact path="/spots" component={SportIndex} className="SportIndex" />
-        <Route exact path="/spots/new" component={CreateSpotForm} className="CreateSpotForm" />
-        <Route exact path="/spots/current" component={SessionSpot} className="SessionSpot" />
-        <Route exact path="/spots/:spotId" component={SpotDetail} className="SpotDetail" />
-        <Route exact path="/spots/:spotId/edit" component={EditSpotForm} className="EditSpotForm" />
-        <Route exact path="/reviews/current" component={SessionReview} />
-      </Switch>
-      )
-    }
-    </div>
+      <Navigation isLoaded={isLoaded} />
+      <hr />
+      {isLoaded && (
+        <Switch>
+          <Route exact path="/" component={SportIndex} className="SportIndex" />
+          <Route exact path="/spots" component={SportIndex} className="SportIndex" />
+          <Route exact path="/spots/new" component={CreateSpotForm} className="CreateSpotForm" />
+          <Route exact path="/spots/current" component={SessionSpot} className="SessionSpot" />
+          <Route exact path="/spots/:spotId" component={SpotDetail} className="SpotDetail" />
+          <Route exact path="/spots/:spotId/edit" component={EditSpotForm} className="EditSpotForm" />
+          <Route exact path="/reviews/current" component={SessionReview} />
+        </Switch>
+        )
+      }
     </div>
   );
 }

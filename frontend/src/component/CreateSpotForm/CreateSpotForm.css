@@ -1,13 +1,25 @@
-.form-container {
+.create-spot-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Set height to 100% of the viewport height */
+  }
+
+  .createform-container {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center horizontally */
     justify-content: center; /* Center vertically */
-    margin: 0 auto;
+    margin: 20 auto;
     max-width: 600px;
-}
+   position: absolute;
+        top: 200px;
+        left: 40%;
+  }
 
-.form-container div {
+
+.createform-container div {
     width: 100%;
 }
 .images {

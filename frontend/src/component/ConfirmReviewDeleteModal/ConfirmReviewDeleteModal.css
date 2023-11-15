@@ -1,0 +1,38 @@
+.review-delete-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+  }
+
+  .review-delete-form-container button {
+    cursor: pointer;
+    width: 100%;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+
+  .review-delete-form-container button:hover {
+    background-color: #0056b3;
+  }

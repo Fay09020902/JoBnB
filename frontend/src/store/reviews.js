@@ -72,7 +72,7 @@ export const loadSessionReviewsThunk = () => async (dispatch) => {
   }
 };
 
-export const deleteReviewThunk = (reviewid,spotid) => async (dispatch) => {
+export const deleteReviewThunk = (reviewid, spotid) => async (dispatch) => {
   const response = await csrfFetch(`/api/reviews/${reviewid}`, {
     method: "DELETE",
   });
@@ -80,7 +80,7 @@ export const deleteReviewThunk = (reviewid,spotid) => async (dispatch) => {
   if (response.ok) {
     const data = await response.json();
 
-    dispatch(deleteReview(reviewid,spotid));
+    dispatch(deleteReview(reviewid, spotid));
     return data;
   } else {
     const errors = await response.json();

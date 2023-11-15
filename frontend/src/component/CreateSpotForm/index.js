@@ -117,8 +117,11 @@ function CreateSpotForm(){
     }
 
     return (
-        <form onSubmit={handleSubmit} className='form-container'>
-            <h2>Create a new Spot</h2>
+        <div className="create-spot-form">
+        <form onSubmit={handleSubmit} className='createform-container'>
+            <div>
+                <h2>Create a new Spot</h2>
+            </div>
             <div className='location'>
                 <h3>
                 Where's your place located? Guests will only get your exact address once they booked a reservation.
@@ -264,6 +267,7 @@ function CreateSpotForm(){
             <hr />
            <button type="submit">Create a Spot</button>
         </form>
+        </div>
         );
 }
 
