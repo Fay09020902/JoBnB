@@ -49,6 +49,7 @@ function CreateReviewModal({spotid}) {
             value={review}
             onChange={(e) => setReview(e.target.value)}
             required
+            placeholder="Leave your review here..."
           />
         </label>
         {errors.errs && <p className="error-message">{errors.errs.review}</p>}

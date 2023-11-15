@@ -43,7 +43,7 @@ function SpotIndexItem({spot, isOwner}) {
 
 
     return spot ? (
-      <>
+      <div className='spotIndexContainer'>
          <NavLink to={`/spots/${spot.id}`} className="spot-detail-link">
                 <div className="spot-tile">
                     <div className="spot-name">{spot.name}</div>
@@ -54,23 +54,25 @@ function SpotIndexItem({spot, isOwner}) {
                     />
                     <div className="spot-item">
                         <div>{spot.city}, {spot.state}</div>
-                        <div className="rating">{spot.avgRating ? spot.avgRating : "New"}</div>
+                        <div className="rating">⭐{spot.avgRating ? spot.avgRating : "New"}</div>
                     </div>
                     <div>{`$${spot.price}night`}</div>
                 </div>
             </NavLink>
             {isOwner &&
               <div className="buttons-container">
-             <NavLink to={`/spots/${spot.id}/edit`}>
-              Update
-            </NavLink>
+                 <div className="update-button">
+                  <NavLink to={`/spots/${spot.id}/edit`}>
+                    Update
+                  </NavLink>
+              </div>
               <OpenModalMenuItem
               itemText="Delete"
               onItemClick={closeMenu}
               modalComponent={  <ConfirmSpotDeleteModal spot = {spot}/>}
               />
             </div>}
-      </>
+      </div>
     ): null;
 }
 

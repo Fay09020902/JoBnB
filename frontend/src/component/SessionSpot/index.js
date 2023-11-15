@@ -34,7 +34,7 @@ function SessionSpot() {
 
     return (
         <div className="manage-spots">
-            <h2> Manage Your Spots</h2>
+            <h2> Manage Spots</h2>
             <button onClick={createClick}>
             Create a New Spot
             </button>

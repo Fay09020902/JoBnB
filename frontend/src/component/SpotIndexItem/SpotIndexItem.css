@@ -5,6 +5,25 @@
     margin-top: 10px;
 }
 
+.buttons-container {
+    display: flex;
+  }
+
+  .update-button
+ {
+  margin-left: 10px; /* Adjust the margin as needed */
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.spotIndexContainer a {
+    text-decoration: none;
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .spot-item div {
     margin:5px;
 }

@@ -10,6 +10,7 @@ import EditSpotForm from './component/EditSpotForm'
 import * as sessionActions from "./store/session";
 import SessionReview from "./component/SessionReview"
 
+
 function App() {
   const dispatch = useDispatch();
   // useEffect(() => {
@@ -21,7 +22,9 @@ function App() {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
-
+  if(!isLoaded) {
+    return <div>Unable to retrieve spots. Please try again shortly.</div>
+  }
 
   return (
     <div className="app">

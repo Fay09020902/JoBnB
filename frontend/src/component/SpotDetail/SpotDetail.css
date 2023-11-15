@@ -23,10 +23,29 @@
 }
 
 
-/* .pricing-section {
+.pricing-section {
+    border: 1px solid #ccc;
+    border-radius: 6px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     margin-top: 20px;
-} */
+    padding: 10px;
+}
+
+.spot-image-each-small {
+    width: 25%;
+    margin-right: 10px;
+  }
+
+  .rating-and-reviews {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .rating-and-reviews span {
+    font-weight: bold;
+    margin-right: 10px; /* Adjust spacing between the price and the star rating */
+  }

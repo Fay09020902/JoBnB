@@ -250,7 +250,7 @@ function EditSpotForm(){
              <div className="errors">{errors && errors.image4}</div>
             </div>
             <hr />
-           <button type="submit">Create a Spot</button>
+           <button type="submit">Update your Spot</button>
         </form>
         );
 }

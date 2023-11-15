@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
-import { Redirect } from "react-router-dom";
 import * as sessionActions from "../../store/session";
 import "./SignUpFormPage.css";
 
@@ -15,7 +14,28 @@ function SignupFormModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [disabled, setDisabled] = useState(true)
   const { closeModal } = useModal();
+
+  useEffect(() => {
+    const isAnyFieldEmpty =
+    email === "" ||
+    username === "" ||
+    firstName === "" ||
+    lastName === "" ||
+    password === "" ||
+    confirmPassword === "";
+
+   if(isAnyFieldEmpty) {
+     setDisabled(true)
+   } else if (username.length < 4 && password.length < 6){
+      setDisabled(true)
+    } else if(password !== confirmPassword) {
+      setDisabled(true)
+    } else {
+      setDisabled(false)
+    }
+  }, [email, username, firstName, lastName, password, confirmPassword])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,7 +76,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        {errors.email && <p className="error-message">{errors.email}</p>}
         <label>
           Username
           <input
@@ -107,7 +127,7 @@ function SignupFormModal() {
           />
         </label>
         {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={disabled}>Sign Up</button>
       </form>
     </div>
   );

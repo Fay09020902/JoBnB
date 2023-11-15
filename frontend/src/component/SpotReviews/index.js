@@ -52,7 +52,7 @@ function SpotReviews({spotid}) {
     }
 
     const order = Object.keys(spotReviews)
-    .sort((a, b) => a - b)
+    .sort((a, b) => b - a)
     // console.log(order)
     // useEffect(() => {
     //     setReviews(Object.values(reviewsSpot))
@@ -82,17 +82,22 @@ function SpotReviews({spotid}) {
         <>
           {order && order.length > 0 && (
                 <ul>
-                    {order.map(reviewid => (
-                        <li key={reviewid}>
-                            <div>{spotReviews[reviewid].User.firstName}</div>
-                            <div>{spotReviews[reviewid].review}</div>
-                            {user && spotReviews[reviewid].userId === user.id && <OpenModalMenuItem
-                            itemText="Delete"
-                            onItemClick={closeMenu}
-                            modalComponent={  <ConfirmReviewDeleteModal spotid = {spotid} reviewid={reviewid}/>}
-                            />}
-                        </li>
-                    ))}
+                    {order.map(reviewid => {
+                       const review = spotReviews[reviewid];
+                      const reviewDate = new Date(review.createdAt);
+                      const formattedDate = reviewDate.toLocaleDateString()
+                        return (
+                           <li key={reviewid}>
+                              <div>{spotReviews[reviewid].User.firstName}</div>
+                              <div>{formattedDate}</div>
+                              <div>{spotReviews[reviewid].review}</div>
+                              {user && spotReviews[reviewid].userId === user.id && <OpenModalMenuItem
+                              itemText="Delete"
+                              onItemClick={closeMenu}
+                              modalComponent={  <ConfirmReviewDeleteModal spotid = {spotid} reviewid={reviewid}/>}
+                              />}
+                         </li>)
+                  })}
                 </ul>)
          }
         </>
