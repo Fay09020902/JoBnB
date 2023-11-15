@@ -6,7 +6,7 @@ import { loadSessionReviewsThunk } from '../../store/reviews';
 
 
 function SessionReview() {
-    console.log("session review component runs")
+    //console.log("session review component runs")
     const dispatch = useDispatch();
 
     const [showMenu, setShowMenu] = useState(false);
