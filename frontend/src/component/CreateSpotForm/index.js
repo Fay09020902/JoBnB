@@ -17,7 +17,7 @@ function CreateSpotForm(){
     const [lng, setLng] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState("");
     const [previewImage, setPreviewImage] = useState("");
     const [image1, setImage1] = useState("");
     const [image2, setImage2] = useState("");
@@ -72,6 +72,10 @@ function CreateSpotForm(){
         if (!description) err.description = "Description is required";
         if (!name) err.name = "Name is required";
         if (!price) err.price = "Price is required";
+        if (!previewImage) err.previewImage = "Preview image is required";
+        if (previewImage && !isImageValid(previewImage)) {
+            err.previewImage= 'Image URL must end in .png, .jpg, or .jpeg';
+        }
 
         pushToImageArray(spotImages, image1, err , 'image1')
         pushToImageArray(spotImages, image2, err, 'image2')
@@ -132,6 +136,7 @@ function CreateSpotForm(){
                     type="text"
                     value={country}
                     onChange={updateCountry}
+                    placeholder="Country"
                 />
                 </label>
                 <div className="errors">{errors && errors.country}</div>
@@ -141,6 +146,7 @@ function CreateSpotForm(){
                     type="text"
                     value={address}
                     onChange={updateAddress}
+                    placeholder="Address"
                 />
                 </label>
                 <div className="errors">{errors && errors.address}</div>
@@ -150,6 +156,7 @@ function CreateSpotForm(){
                     type="text"
                     value={city}
                     onChange={updateCity}
+                    placeholder="City"
                 />
                 </label>
                 <div className="errors">{errors && errors.city}</div>
@@ -159,6 +166,7 @@ function CreateSpotForm(){
                     type="text"
                     value={state}
                     onChange={updateState}
+                    placeholder="STATE"
                 />
                 </label>
                 <div className="errors">{errors && errors.state}</div>
@@ -168,6 +176,7 @@ function CreateSpotForm(){
                     type="text"
                     value={lat}
                     onChange={updateLat}
+                    placeholder="Latitude"
                 />
                 </label>
                 <div className="errors">{errors && errors.lat}</div>
@@ -177,6 +186,7 @@ function CreateSpotForm(){
                     type="text"
                     value={lng}
                     onChange={updateLng}
+                    placeholder="Longitude"
                 />
                 </label>
                 <div className="errors">{errors && errors.lng}</div>
@@ -190,6 +200,7 @@ function CreateSpotForm(){
                 <textarea
                     value={description}
                     onChange={updateDescription}
+                    placeholder="Please write at least 30 characters"
                 />
                 </label>
                 <div className="errors">{errors && errors.description}</div>
@@ -202,6 +213,7 @@ function CreateSpotForm(){
                 <input
                     value={name}
                     onChange={updateName}
+                    placeholder="Name of your spot"
                 />
                 </label>
                 <div className="errors">{errors && errors.name}</div>
