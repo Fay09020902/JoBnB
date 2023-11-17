@@ -75,7 +75,7 @@ export const getSpotsDetailsThunk = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`)
     if (response.ok) {
         const spot = await response.json();
-        console.log("spot in backend", spot)
+        //console.log("spot in backend", spot)
         dispatch(createSpot(spot));
         return spot;
     }
@@ -139,7 +139,8 @@ const spotReducer = (state = initialState, action) => {
             return newState;
         case CREATE_SPOT:
             newState = {...state}
-            newState[action.spot.id] = action.spot
+
+            newState[action.spot.id] = {...action.spot}
             return newState
         case DELETE_SPOT:
             const allSpots = { ...state };

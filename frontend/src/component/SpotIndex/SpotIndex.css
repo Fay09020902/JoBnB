@@ -1,7 +1,7 @@
 .index {
     display: flex;
     flex-direction: row;
-    margin: 20px;
+    margin: 70px;
     flex-wrap: wrap;
     justify-content: space-between;
 

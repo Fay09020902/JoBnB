@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector} from "react-redux";
 import { updateSpotThunk } from '../../store/spots';
 import { addSpotImagesThunk } from '../../store/spotimages'
+import {getSpotsDetailsThunk} from '../../store/spots'
 import './EditSpotForm.css'
 
 
@@ -19,15 +20,45 @@ function EditSpotForm(){
     const [lat, setLat] = useState(spot.lat);
     const [lng, setLng] = useState(spot.lng);
     const [name, setName] = useState(spot.name);
-    const [description, setDescription] = useState(spot.name);
+    const [description, setDescription] = useState(spot.description);
     const [price, setPrice] = useState(spot.price);
-    const [previewImage, setPreviewImage] = useState(spot.previewImage);
-    const [image1, setImage1] = useState(spot.image1 ? spot.image1 : '');
-    const [image2, setImage2] = useState(spot.image2 ? spot.image2 : '');
-    const [image3, setImage3] = useState(spot.image3 ? spot.image3 : '');
-    const [image4, setImage4] = useState(spot.image4 ? spot.image4 : '');
+    const [previewImage, setPreviewImage] = useState("");
+    const [image1, setImage1] = useState("");
+    const [image2, setImage2] = useState("");
+    const [image3, setImage3] = useState("");
+    const [image4, setImage4] = useState("");
     const [submitted, setSubmitted] = useState(false)
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        dispatch(getSpotsDetailsThunk(spotId));
+      }, [dispatch, spotId]);
+
+
+    useEffect(() => {
+        const images = [];
+        if (spot && spot.SpotImages) {
+            Object.values(spot.SpotImages).forEach((image) => {
+                if (image.preview) {
+                setPreviewImage(image.url);
+                } else images.push(image.url);
+            });
+            if(images[0]) {
+                setImage1(images[0])
+            }
+            if(images[1]) {
+                setImage2(images[1])
+            }
+            if(images[2]) {
+                setImage3(images[2])
+            }
+            if(images[3]) {
+                setImage4(images[3])
+            }
+        }
+    }, [spot])
+    // if (!spot) return;
+
 
     const updateAddress = (e) => setAddress(e.target.value);
     const updateCity = (e) => setCity(e.target.value);
@@ -73,6 +104,12 @@ function EditSpotForm(){
            err.description = "Description needs 30 or more characters";
            if (name && name.length > 50)
            err.description = "Name must be less than 50 characters";
+
+           if (!previewImage) err.previewImage = "Preview image is required";
+           if (previewImage && !isImageValid(previewImage)) {
+               err.previewImage= 'Image URL must end in .png, .jpg, or .jpeg';
+           }
+
         pushToImageArray(spotImages, image1, err , 'image1')
         pushToImageArray(spotImages, image2, err, 'image2')
         pushToImageArray(spotImages, image3, err, 'image3')
