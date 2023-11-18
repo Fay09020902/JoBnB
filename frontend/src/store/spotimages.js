@@ -24,7 +24,7 @@ export const deleteAllSpotImage = (spotId, spotImages) => ({
 })
 
 export const addSpotImagesThunk = (images, spotid) =>async (dispatch) => {
-    //console.log("addSpotImagesThunk runs")
+    console.log("addSpotImagesThunk runs")
     //console.log("iamges: ", images)
     const uploadedImages = []
     for(let image of images) {
