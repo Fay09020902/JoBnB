@@ -43,7 +43,6 @@ function CreateSpotForm(){
         return validExtensions.includes(`.${ext}`);
       };
 
-    const spotImages = []
     useEffect(() => {
         const err = {}
         if (!country) err.country = "Country is required";
