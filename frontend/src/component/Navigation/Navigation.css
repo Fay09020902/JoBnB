@@ -37,3 +37,9 @@ justify-content: space-between;
   .nav-list a:hover {
     color: brown;
   }
+
+
+  .profile {
+    display: flex;
+    align-items: center; /* Center items vertically */
+  }

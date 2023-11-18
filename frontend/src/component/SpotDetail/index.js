@@ -75,13 +75,13 @@ function SpotDetail() {
                     </div>
                 </div>
                 <div className='info-session'>
-                    <div>
-                        <div>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</div>
+                    <div className='owner-section'>
+                        <div className='owner'>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</div>
                         <p>{spot.description}</p>
                     </div>
                     <div className='pricing-section'>
                         <div className='rating-and-reviews'>
-                            <span>{`$${spot.price}night`} ⭐{spot.avgStarRating.toFixed(1)}</span>
+                            <span>{`$${spot.price}night`} </span> <span>⭐{spot.avgStarRating.toFixed(1)}</span>
                             {spot.numReviews > 0 &&
                             <span> ·  #{spot.numReviews === 1 ?(<span>1 review</span>):(<span>{spot.numReviews} reviews</span>)} </span>
                             }
@@ -94,16 +94,16 @@ function SpotDetail() {
                 </div>
                 <hr />
                 <div className='review-session'>
-                <div>⭐{spot.avgStarRating.toFixed(1)} #{spot.numReviews} {spot.numReviews === 1 ?(<span>review</span>):(<span>reviews</span>)}</div>
+                <div className='review-session-ratings'>⭐{spot.avgStarRating.toFixed(1)} #{spot.numReviews} {spot.numReviews === 1 ?(<span>review</span>):(<span>reviews</span>)}</div>
                     {session.user && (session.user.id !== spot.ownerId)  && !hidePostReview() &&
-                        (<div>
-                        <OpenModalButton
-                        buttonText="Post Your Review"
-                        modalComponent={<CreateReviewModal spotid={spotId}/>}
-                        />
-                        {!spot.numReviews && (
-                            <div>Be the first to post a review!</div>
-                        ) }
+                    (<div className='post-review-modal'>
+                    <OpenModalButton
+                    buttonText="Post Your Review"
+                    modalComponent={<CreateReviewModal spotid={spotId}/>}
+                    />
+                    {!spot.numReviews && (
+                        <div>Be the first to post a review!</div>
+                    ) }
                    </div>)
                     }
                    <SpotReviews spotid={spotId}/>
