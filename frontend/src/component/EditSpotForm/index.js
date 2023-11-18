@@ -30,6 +30,7 @@ function EditSpotForm(){
     const [image4, setImage4] = useState("");
     const [submitted, setSubmitted] = useState(false)
     const [errors, setErrors] = useState({});
+    console.log(previewImage, image1, image2)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -153,6 +154,7 @@ function EditSpotForm(){
         //of no errors
         if(!Object.values(err).length) {
             try {
+                console.log("spotImages in front: ", spotImages)
                 const spot_response = await dispatch(updateSpotThunk( spot, spotId ));
                 if (spot_response) {
                     console.log("spotImages slice of state ", spotImagesArray)

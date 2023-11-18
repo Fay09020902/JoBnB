@@ -87,6 +87,7 @@ export const updateSpotThunk = (payload, spotId) => async (dispatch) => {
       });
       if (response.ok) {
         const form = await response.json();
+        //console.log("form: ", form)
         dispatch(createSpot(form));
         return form;
       }
@@ -97,9 +98,15 @@ export const loadSessionSpotsThunk = () => async (dispatch) => {
 
     if (response.ok) {
         const spots = await response.json();
-        console.log("spots for current in backend: ", spots)
-        dispatch(loadSpots(spots.Spots));
-        return spots
+        //console.log("spots for current in backend: ", spots)
+
+        // // Load detailed spot information for each spot
+        // const detailedSpots = await Promise.all(spots.Spots.map(async (spot) => {
+        //     const detailedSpot = await dispatch(getSpotsDetailsThunk(spot.id));
+        //     return detailedSpot;
+        // }));
+        // console.log(detailedSpots)
+        const reloadSpots = await dispatch(loadSpotsThunk())
     }
 };
 
