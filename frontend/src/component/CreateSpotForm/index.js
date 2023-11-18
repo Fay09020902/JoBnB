@@ -1,5 +1,5 @@
 import { Link, useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { createSpotsThunk } from '../../store/spots';
 import { addSpotImagesThunk } from '../../store/spotimages'
@@ -43,24 +43,9 @@ function CreateSpotForm(){
         return validExtensions.includes(`.${ext}`);
       };
 
-    const pushToImageArray = (arr, image, err, imagename) => {
-        if (image) {
-            if (!isImageValid(image)) {
-              err[imagename] = 'Image URL must end in .png, .jpg, or .jpeg';
-            } else {
-                arr.push({ url: image, preview: false });
-            }
-          }
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrors({});
-        setSubmitted(true)
+    const spotImages = []
+    useEffect(() => {
         const err = {}
-        const spot = { address, city, state, country, name, description, price, lat, lng }
-        const spotImages = [{url:previewImage, preview: true}]
-
         if (!country) err.country = "Country is required";
         if (!address) err.address = "Address is required";
         if (!city) err.city = "City is required";
@@ -76,16 +61,62 @@ function CreateSpotForm(){
         if (previewImage && !isImageValid(previewImage)) {
             err.previewImage= 'Image URL must end in .png, .jpg, or .jpeg';
         }
-
-        pushToImageArray(spotImages, image1, err , 'image1')
-        pushToImageArray(spotImages, image2, err, 'image2')
-        pushToImageArray(spotImages, image3, err, 'image3')
-        pushToImageArray(spotImages, image4, err, 'image4')
+        if (image1 && !isImageValid(image1)) {
+            err.image1= 'Image URL must end in .png, .jpg, or .jpeg';
+        }
+        if (image2 && !isImageValid(image2)) {
+            err.image2= 'Image URL must end in .png, .jpg, or .jpeg';
+        }
+        if (image3 && !isImageValid(image3)) {
+            err.image3= 'Image URL must end in .png, .jpg, or .jpeg';
+        }
+        if (image4 && !isImageValid(image4)) {
+            err.image4= 'Image URL must end in .png, .jpg, or .jpeg';
+        }
 
         setErrors(err);
-       // console.log("err length", Object.values(err).length)
-        //of no errors
-        if(!Object.values(err).length) {
+
+    },  [
+        country,
+        address,
+        city,
+        state,
+        lat,
+        lng,
+        description,
+        name,
+        price,
+        previewImage,
+        image1,
+        image2,
+        image3,
+        image4,
+      ])
+
+    console.log("submitted", submitted)
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitted(true)
+        const spot = {
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price,
+          };
+
+        const spotImages = [{url:previewImage, preview: true}]
+        if (image1) spotImages.push({ url: image1, preview: false });
+        if (image2) spotImages.push({ url: image2, preview: false });
+        if (image3) spotImages.push({ url: image3, preview: false });
+        if (image4) spotImages.push({ url: image4, preview: false });
+
+        //if no errors
+        if(!Object.values(errors).length) {
             try {
                 const spot_response = await dispatch(createSpotsThunk(spot));
                 if (spot_response) {
@@ -139,7 +170,7 @@ function CreateSpotForm(){
                     placeholder="Country"
                 />
                 </label>
-                <div className="errors">{errors && errors.country}</div>
+                <div className="errors">{submitted && errors.country}</div>
                 <label>
                 Street Address
                 <input
@@ -149,7 +180,7 @@ function CreateSpotForm(){
                     placeholder="Address"
                 />
                 </label>
-                <div className="errors">{errors && errors.address}</div>
+                <div className="errors">{submitted && errors.address}</div>
                 <label>
                 City
                 <input
@@ -159,7 +190,7 @@ function CreateSpotForm(){
                     placeholder="City"
                 />
                 </label>
-                <div className="errors">{errors && errors.city}</div>
+                <div className="errors">{submitted && errors.city}</div>
                 <label>
                 State
                 <input
@@ -169,7 +200,7 @@ function CreateSpotForm(){
                     placeholder="STATE"
                 />
                 </label>
-                <div className="errors">{errors && errors.state}</div>
+                <div className="errors">{submitted && errors.state}</div>
                 <label>
                 lat
                 <input
@@ -179,7 +210,7 @@ function CreateSpotForm(){
                     placeholder="Latitude"
                 />
                 </label>
-                <div className="errors">{errors && errors.lat}</div>
+                <div className="errors">{submitted && errors.lat}</div>
                 <label>
                 lng
                 <input
@@ -189,7 +220,7 @@ function CreateSpotForm(){
                     placeholder="Longitude"
                 />
                 </label>
-                <div className="errors">{errors && errors.lng}</div>
+                <div className="errors">{submitted && errors.lng}</div>
 
             </div>
             <hr />
@@ -203,7 +234,7 @@ function CreateSpotForm(){
                     placeholder="Please write at least 30 characters"
                 />
                 </label>
-                <div className="errors">{errors && errors.description}</div>
+                <div className="errors">{submitted && errors.description}</div>
             </div>
             <hr />
             <div>
@@ -216,7 +247,7 @@ function CreateSpotForm(){
                     placeholder="Name of your spot"
                 />
                 </label>
-                <div className="errors">{errors && errors.name}</div>
+                <div className="errors">{submitted && errors.name}</div>
             </div>
             <hr />
             <div className='price'>
@@ -229,7 +260,7 @@ function CreateSpotForm(){
                     placeholder={"Price per night (USD)"}
                 />
                 </label>
-                <div className="errors">{errors && errors.price}</div>
+                <div className="errors">{submitted && errors.price}</div>
             </div>
             <hr />
             <div className="images">
@@ -242,7 +273,7 @@ function CreateSpotForm(){
                 value={previewImage}
                 placeholder="Preview Image URL"
             />
-            <div className="errors">{errors && errors.previewImage}</div>
+            <div className="errors">{submitted && errors.previewImage}</div>
             <input
                 id="image1"
                 type="text"
@@ -250,7 +281,7 @@ function CreateSpotForm(){
                 value={image1}
                 placeholder="Image URL"
             />
-            <div className="errors">{errors && errors.image1}</div>
+            <div className="errors">{submitted && errors.image1}</div>
             <input
                 id="image2"
                 type="text"
@@ -258,7 +289,7 @@ function CreateSpotForm(){
                 value={image2}
                 placeholder="Image URL"
             />
-            <div className="errors">{errors && errors.image2}</div>
+            <div className="errors">{submitted && errors.image2}</div>
             <input
                 id="image3"
                 type="text"
@@ -266,7 +297,7 @@ function CreateSpotForm(){
                 value={image3}
                 placeholder="Image URL"
             />
-             <div className="errors">{errors && errors.image3}</div>
+             <div className="errors">{submitted && errors.image3}</div>
             <input
                 id="image4"
                 type="text"
@@ -274,7 +305,7 @@ function CreateSpotForm(){
                 value={image4}
                 placeholder="Image URL"
             />
-             <div className="errors">{errors && errors.image4}</div>
+             <div className="errors">{submitted && errors.image4}</div>
             </div>
             <hr />
            <button type="submit">Create a Spot</button>
