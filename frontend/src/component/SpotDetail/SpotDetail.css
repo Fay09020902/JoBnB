@@ -1,14 +1,23 @@
 .spot-images {
     display: flex;
-    flex-direction: row;
-    margin: 20px;
     flex-wrap: wrap;
+  }
+
+  .large-image {
+    flex: 0 0 60%; /* Adjust the percentage based on your layout preference */
+  }
+
+.small-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    flex: 0 0 40%;
 }
 
-.spot-image-each {
-    margin: 15px;
-}
-
+.spot-image-each-small {
+    width: 100%;
+    height: 100%;
+  }
 
 .info-session {
     display: flex;
@@ -34,10 +43,7 @@
     padding: 10px;
 }
 
-.spot-image-each-small {
-    width: 25%;
-    margin-right: 10px;
-  }
+
 
   .rating-and-reviews {
     display: flex;

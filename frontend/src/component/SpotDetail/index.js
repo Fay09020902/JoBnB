@@ -42,6 +42,7 @@ function SpotDetail() {
     if(!isLoaded) {
     return <div>Unable to retrieve details. Please try again shortly.</div>
   }
+
     return (
         <>
         {isLoaded && (
@@ -51,17 +52,15 @@ function SpotDetail() {
                     {`${spot.city}, ${spot.state}, ${spot.country}`}
                 </div>
                 <div className='spot-images'>
-                    <div className='large-images'>
                         {spot.SpotImages && spot.SpotImages[spot.SpotImages.length - 1]  && (
                                 <div className='large-image'>
                                     <img
                                         className='spot-detail-image'
                                         alt={spot.SpotImages[spot.SpotImages.length - 1].url}
-                                        src={spot.SpotImages[spot.SpotImages.length - 1].previewImage}
+                                        src={spot.SpotImages[spot.SpotImages.length - 1].url}
                                     />
                                 </div>
                         )}
-                    </div>
                     <div className='small-images'>
                         {spot.SpotImages &&
                         spot.SpotImages.slice(0, -1).map((image) => (
@@ -69,7 +68,7 @@ function SpotDetail() {
                             <img
                                 className='spot-detail-image-small'
                                 alt={image.url}
-                                src={image.previewImage}
+                                src={image.url}
                             />
                              </div>
                         ))}
