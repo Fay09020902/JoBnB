@@ -10,9 +10,9 @@ import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 
 
 
-function SpotIndexItem({spotId, isOwner}) {
+function SpotIndexItem({spotId, isOwner, ifSession}) {
 
-    console.log("spotidexItem runs")
+    //console.log("spotidexItem runs")
     const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef(null);
@@ -54,7 +54,7 @@ function SpotIndexItem({spotId, isOwner}) {
                     />
                     <div className="spot-item">
                         <div className='location'>{spotstate.city}, {spotstate.state}</div>
-                        <div>⭐{spotstate.avgRating ? spotstate.avgRating : "New"}</div>
+                        <div>⭐{spotstate.avgRating ? spotstate.avgRating.toFixed(1) : "New"}</div>
                     </div>
                     <div className="price">{`$${spotstate.price}night`}</div>
                 </div>

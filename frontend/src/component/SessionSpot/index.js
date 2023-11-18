@@ -1,19 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector} from "react-redux";
 import { loadSessionSpotsThunk } from '../../store/spots';
 import SpotIndexItem from '../SpotIndexItem';
 import { useHistory } from "react-router-dom";
 
 function SessionSpot() {
-    console.log("session spot component runs")
+    //.log("session spot component runs")
     const dispatch = useDispatch();
     const history = useHistory();
+    //const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         console.log("useeffect for sessionspot runs")
         const fetchData = async () => {
             try {
-                await dispatch(loadSessionSpotsThunk(user.id));
+                const detailedspots = await dispatch(loadSessionSpotsThunk(user.id));
             } catch (error) {
                 const data = await error.json();
                 //console.error('Error fetching data:', data);
@@ -27,6 +28,7 @@ function SessionSpot() {
     //only using state does not work when refresh page where all state reset, still need to add fetch session spot for it
     // Filter spots that belong to the authenticated user
     const userSpots = Object.values(allSpots).filter((spot) => spot.ownerId === user.id);
+    //console.log("userspots: ", userSpots)
     const createClick = () => {
         history.push("/spots/new");
       };
@@ -43,7 +45,7 @@ function SessionSpot() {
                 {Object.values(userSpots).map((spot) => (
                     <div className="item" key={spot.id}>
                         <SpotIndexItem
-                        spotId={spot.id} isOwner={true}/>
+                        spotId={spot.id} isOwner={true} ifSession= {true}/>
                     </div>
                 ))}
             </div>
