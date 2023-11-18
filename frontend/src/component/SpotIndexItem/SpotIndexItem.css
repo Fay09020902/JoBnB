@@ -24,9 +24,7 @@
   align-items: center;
 }
 
-.spot-item div {
-    margin:5px;
-}
+
 
 .spot-name {
     visibility: hidden;
@@ -65,4 +63,21 @@ img {
   .spot-tile:hover .spot-name {
     visibility: visible;
     opacity: 1;
+  }
+
+  .updatemanage-button a {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .deletemanage-button {
+    color: #694343;
+    text-decoration: none;
+    border: none;
+  }
+
+  .price {
+    font-weight: bold;
+    margin-right: 20px;
+    margin-bottom: 10px;
   }

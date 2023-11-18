@@ -97,6 +97,7 @@ export const loadSessionSpotsThunk = () => async (dispatch) => {
 
     if (response.ok) {
         const spots = await response.json();
+        console.log("spots for current in backend: ", spots)
         dispatch(loadSpots(spots.Spots));
         return spots
     }

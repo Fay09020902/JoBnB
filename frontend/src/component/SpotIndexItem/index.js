@@ -1,22 +1,22 @@
 // import { useEffect } from 'react';
 // import { useDispatch, useSelector} from "react-redux";
 import { NavLink} from 'react-router-dom';
-import EditSpotForm from '../EditSpotForm'
 import ConfirmSpotDeleteModal from '../ConfirmSpotDeleteModal'
 import './SpotIndexItem.css'
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 //import { createSpotsThunk, loadSpots } from '../../store/spots';
 
 
 
-function SpotIndexItem({spot, isOwner}) {
+function SpotIndexItem({spotId, isOwner}) {
 
-    //console.log("spotidexItem runs")
+    console.log("spotidexItem runs")
     const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef(null);
+  const spotstate = useSelector(state => state.spots[spotId]);
 
   const openMenu = () => {
     if (showMenu) return;
@@ -41,35 +41,38 @@ function SpotIndexItem({spot, isOwner}) {
 
 
 
-    return spot ? (
+    return spotstate ? (
       <div className='spotIndexContainer'>
-         <NavLink to={`/spots/${spot.id}`} className="spot-detail-link">
+         <NavLink to={`/spots/${spotstate.id}`} className="spot-detail-link">
+          {console.log("spot in spot index item: ", spotstate)}
                 <div className="spot-tile">
-                    <div className="spot-name">{spot.name}</div>
+                    <div className="spot-name">{spotstate.name}</div>
                     <img
                         className="spot-entry-image"
-                        alt={spot.imageUrl}
-                        src={`${spot.previewImage}`}
+                        alt={spotstate.imageUrl}
+                        src={`${spotstate.previewImage}`}
                     />
                     <div className="spot-item">
-                        <div>{spot.city}, {spot.state}</div>
-                        <div className="rating">⭐{spot.avgRating ? spot.avgRating : "New"}</div>
+                        <div className='location'>{spotstate.city}, {spotstate.state}</div>
+                        <div>⭐{spotstate.avgRating ? spotstate.avgRating : "New"}</div>
                     </div>
-                    <div>{`$${spot.price}night`}</div>
+                    <div className="price">{`$${spotstate.price}night`}</div>
                 </div>
             </NavLink>
             {isOwner &&
               <div className="buttons-container">
-                 <div className="update-button">
-                  <NavLink to={`/spots/${spot.id}/edit`}>
-                    Update
-                  </NavLink>
-              </div>
-              <OpenModalMenuItem
-              itemText="Delete"
-              onItemClick={closeMenu}
-              modalComponent={  <ConfirmSpotDeleteModal spot = {spot}/>}
-              />
+                 <div className="updatemanage-button">
+                    <NavLink to={`/spots/${spotstate.id}/edit`}>
+                      Update
+                    </NavLink>
+                </div>
+                <div className="deletemanage-button">
+                    <OpenModalMenuItem
+                    itemText="Delete"
+                    onItemClick={closeMenu}
+                    modalComponent={  <ConfirmSpotDeleteModal spot = {spotstate}/>}
+                    />
+                </div>
             </div>}
       </div>
     ): null;

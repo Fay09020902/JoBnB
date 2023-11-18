@@ -21,7 +21,7 @@ function SportIndex() {
             {Object.values(allSpots).map((spot) => (
                 <div className="item" key={spot.id}>
                     <SpotIndexItem
-                    spot={spot} isOwner={false}/>
+                    spotId={spot.id} isOwner={false}/>
                 </div>
             ))}
         </div>
