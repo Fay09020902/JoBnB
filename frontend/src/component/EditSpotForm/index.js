@@ -2,7 +2,7 @@ import { Link, useHistory, useParams  } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector} from "react-redux";
 import { updateSpotThunk } from '../../store/spots';
-import { addSpotImagesThunk } from '../../store/spotimages'
+import { addSpotImagesThunk,  loadSpotImages, deleteAllSpotImagesThunk} from '../../store/spotimages'
 import {getSpotsDetailsThunk} from '../../store/spots'
 import './EditSpotForm.css'
 
@@ -12,6 +12,7 @@ function EditSpotForm(){
     const {spotId} = useParams()
     const history = useHistory();
     const spot = useSelector(state => state.spots[spotId]);
+    const spotImagesArray = useSelector(state => state.spotImages)
 
     const [address, setAddress] = useState(spot.address);
     const [city, setCity] = useState(spot.city);
@@ -31,9 +32,24 @@ function EditSpotForm(){
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        dispatch(getSpotsDetailsThunk(spotId));
-      }, [dispatch, spotId]);
+        const fetchData = async () => {
+            try {
+                const spot_detail = await dispatch(getSpotsDetailsThunk(spotId));
+                if (spot_detail) {
+                    console.log("spotdetails: ", spot_detail)
+                    const loadedImages = await dispatch(loadSpotImages(spotId, spot_detail.SpotImages));
+                }
+            } catch (error) {
+                const data = await error.json();
+                if (data && data.errors) {
+                    setErrors(data.errors);
+                }
+            }
+        };
 
+        fetchData();
+
+    }, [dispatch, spotId]);
 
     useEffect(() => {
         const images = [];
@@ -57,7 +73,7 @@ function EditSpotForm(){
             }
         }
     }, [spot])
-    // if (!spot) return;
+
 
 
     const updateAddress = (e) => setAddress(e.target.value);
@@ -139,14 +155,20 @@ function EditSpotForm(){
             try {
                 const spot_response = await dispatch(updateSpotThunk( spot, spotId ));
                 if (spot_response) {
+                    console.log("spotImages slice of state ", spotImagesArray)
                     // dispatch(addSpotImagesThunk(spotImages, spot_response.id))
                     // .then(history.push(`/spots/${spot_response.id}`))
-                    const uploadedImages = await dispatch(addSpotImagesThunk(spotImages, spot_response.id));
+                    const deleteResponses = await dispatch(deleteAllSpotImagesThunk(spotId))
+                    if(deleteResponses) {
+                        const uploadedImages = await dispatch(addSpotImagesThunk(spotImages, spot_response.id));
+                        console.log("updatedImages: ", uploadedImages)
+                        const imagesState = await dispatch(loadSpotImages(spotId, spotImages));
 
-                    // Check if the images were successfully uploaded
-                    if (uploadedImages) {
-                        history.push(`/spots/${spot_response.id}`);
-                }
+                        // Check if the images were successfully uploaded
+                        if (imagesState) {
+                            history.push(`/spots/${spot_response.id}`);
+                        }
+                    }
                 }
               } catch (error) {
                   const data = await error.json();

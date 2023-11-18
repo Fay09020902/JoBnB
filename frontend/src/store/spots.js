@@ -1,9 +1,9 @@
 import { csrfFetch } from "./csrf";
-// import {LOAD_SPOTIMAGES} from './spotimages'
 
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const CREATE_SPOT = 'spots/CREATE_SPOT';
 const DELETE_SPOT = 'spots/DELETE_SPOT'
+
 //const LOAD_SESSIONSPOT = 'spots/LOAD_SESSIONSPOT';
 
 
@@ -27,11 +27,6 @@ export const deleteSpot = (spotId) => ({
 //     spot,
 // })
 
-// export const loadSpotImages = (id, images) => ({
-//     type: LOAD_SPOTIMAGES,
-//     id,
-//     images  //array [{url, preview}, ]
-//   });
 
 
 // export const addSpotImagesToState = (id, images) => async (dispatch) => {
