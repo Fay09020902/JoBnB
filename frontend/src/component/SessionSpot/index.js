@@ -5,11 +5,12 @@ import SpotIndexItem from '../SpotIndexItem';
 import { useHistory } from "react-router-dom";
 
 function SessionSpot() {
-    //console.log("session spot component runs")
+    console.log("session spot component runs")
     const dispatch = useDispatch();
     const history = useHistory();
 
     useEffect(() => {
+        console.log("useeffect for sessionspot runs")
         const fetchData = async () => {
             try {
                 await dispatch(loadSessionSpotsThunk(user.id));
@@ -42,7 +43,7 @@ function SessionSpot() {
                 {Object.values(userSpots).map((spot) => (
                     <div className="item" key={spot.id}>
                         <SpotIndexItem
-                        spot={spot} isOwner={true}/>
+                        spotId={spot.id} isOwner={true}/>
                     </div>
                 ))}
             </div>
