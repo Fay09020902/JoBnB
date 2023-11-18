@@ -90,11 +90,13 @@ function SpotReviews({spotid}) {
                               <div>{spotReviews[reviewid].User.firstName}</div>
                               <div>{formattedDate}</div>
                               <div>{spotReviews[reviewid].review}</div>
+                              <div className="delete-button">
                               {user && spotReviews[reviewid].userId === user.id && <OpenModalMenuItem
                               itemText="Delete"
                               onItemClick={closeMenu}
                               modalComponent={  <ConfirmReviewDeleteModal spotid = {spotid} reviewid={reviewid}/>}
                               />}
+                              </div>
                          </li>)
                   })}
                 </ul>)

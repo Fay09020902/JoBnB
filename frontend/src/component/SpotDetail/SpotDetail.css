@@ -4,7 +4,12 @@
   }
 
   .large-image {
-    flex: 0 0 60%; /* Adjust the percentage based on your layout preference */
+    flex: 0 0 calc(60% - 10px);
+    margin-right: 10px;
+  }
+
+  .large-image img {
+    padding-right: 10px;
   }
 
 .small-images {
@@ -17,15 +22,33 @@
 .spot-image-each-small {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
+
+.small-images img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 .info-session {
     display: flex;
     flex-direction: row;
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     justify-content: space-between;
 }
 
+.owner-section {
+  width:70%;
+}
+
+.pricing-section {
+  width: 30%; /* Adjust the width based on your preference, leaving some space between the sections */
+}
+.owner {
+  font-weight: bold;
+}
 .spot-detail {
     max-width: 1000px;
     margin: 0 auto;
@@ -39,19 +62,28 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    margin-top: 20px;
     padding: 10px;
 }
-
-
 
   .rating-and-reviews {
     display: flex;
     align-items: center;
     white-space: nowrap;
+    justify-content: space-between;
   }
 
   .rating-and-reviews span {
     font-weight: bold;
-    margin-right: 10px; /* Adjust spacing between the price and the star rating */
+    margin-right: 20px; /* Adjust spacing between the price and the star rating */
   }
+
+.review-session-ratings {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+
+.post-review-modal button{
+  border-color: var(--f-k-smk-x);
+  margin-bottom: 10px;
+}

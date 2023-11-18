@@ -31,3 +31,9 @@ ul {
   .confirm-modal {
     /* Add styles for the ConfirmReviewDeleteModal here */
   }
+
+
+  .delete-button {
+    width: 80px;
+    border-color: var(--f-k-smk-x);
+  }
