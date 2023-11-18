@@ -143,7 +143,7 @@ router.get(
                 }
             }
         )
-
+        console.log("spots in get curetns spots", spots)
         let previewImage;
         const updatedSpots = spots.map(spot => {
             const {SpotImages, ...rest} = spot.toJSON()
@@ -265,8 +265,10 @@ router.get(
 router.post("/:spotId/images",
             requireAuth,
             async (req, res, next) => {
+                console.log("add spot image route runs")
                 let { url, preview } = req.body;
                 const spotId = Number(req.params.spotId);
+                console.log("spotid in post image: ", spotId)
                 const { user } = req;
                 const currSpot = await Spot.findByPk(spotId);
                 if (!currSpot) {
