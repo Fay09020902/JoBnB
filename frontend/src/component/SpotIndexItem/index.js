@@ -54,7 +54,7 @@ function SpotIndexItem({spotId, isOwner, ifSession}) {
                     />
                     <div className="spot-item">
                         <div className='location'>{spotstate.city}, {spotstate.state}</div>
-                        <div>⭐{spotstate.avgRating ? spotstate.avgRating.toFixed(1) : "New"}</div>
+                        <div>⭐{spotstate.avgRating ? spotstate.avgRating : "New"}</div>
                     </div>
                     <div className="price">{`$${spotstate.price}night`}</div>
                 </div>

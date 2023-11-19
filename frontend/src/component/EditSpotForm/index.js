@@ -37,7 +37,7 @@ function EditSpotForm(){
             try {
                 const spot_detail = await dispatch(getSpotsDetailsThunk(spotId));
                 if (spot_detail) {
-                    console.log("spotdetails: ", spot_detail)
+                    //console.log("spotdetails: ", spot_detail)
                     const loadedImages = await dispatch(loadSpotImages(spotId, spot_detail.SpotImages));
                 }
             } catch (error) {
@@ -154,16 +154,16 @@ function EditSpotForm(){
         //of no errors
         if(!Object.values(err).length) {
             try {
-                console.log("spotImages in front: ", spotImages)
+                //console.log("spotImages in front: ", spotImages)
                 const spot_response = await dispatch(updateSpotThunk( spot, spotId ));
                 if (spot_response) {
-                    console.log("spotImages slice of state ", spotImagesArray)
+                    //console.log("spotImages slice of state ", spotImagesArray)
                     // dispatch(addSpotImagesThunk(spotImages, spot_response.id))
                     // .then(history.push(`/spots/${spot_response.id}`))
                     const deleteResponses = await dispatch(deleteAllSpotImagesThunk(spotId))
                     if(deleteResponses) {
                         const uploadedImages = await dispatch(addSpotImagesThunk(spotImages, spot_response.id));
-                        console.log("updatedImages: ", uploadedImages)
+                        //console.log("updatedImages: ", uploadedImages)
                         const imagesState = await dispatch(loadSpotImages(spotId, spotImages));
 
                         // Check if the images were successfully uploaded
