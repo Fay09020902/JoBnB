@@ -17,20 +17,20 @@ function SignupFormModal() {
   const [disabled, setDisabled] = useState(true)
   const { closeModal } = useModal();
 
-  useEffect(() => {
-    if (
-      email &&
-      username &&
-      firstName &&
-      lastName &&
-      password &&
-      confirmPassword &&
-      username.length >= 4 &&
-      confirmPassword.length >= 6 &&
-      password.length >= 6
-    )
-    setDisabled(false);
-  }, [email, username, firstName, lastName, password, confirmPassword])
+  // useEffect(() => {
+  //   if (
+  //     email &&
+  //     username &&
+  //     firstName &&
+  //     lastName &&
+  //     password &&
+  //     confirmPassword &&
+  //     username.length >= 4 &&
+  //     confirmPassword.length >= 6 &&
+  //     password.length >= 6
+  //   )
+  //   setDisabled(false);
+  // }, [email, username, firstName, lastName, password, confirmPassword])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -128,7 +128,12 @@ function SignupFormModal() {
           />
         </label>
         {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
-        <button type="submit" disabled={disabled}>Sign Up</button>
+        <button type="submit" disabled={!email.length ||
+          !username.length || username.length < 4 ||
+          !firstName.length ||
+          !lastName.length ||
+          !password.length || password.length < 6 ||
+          !confirmPassword.length}>Sign Up</button>
       </form>
     </div>
   );
