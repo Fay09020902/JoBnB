@@ -72,7 +72,7 @@ if (!isProduction) {
     if(isProduction) {
       res.json({
         message: err.message,
-        error: err.errors,
+        errors: err.errors,
       })
     } else {
       res.json({
