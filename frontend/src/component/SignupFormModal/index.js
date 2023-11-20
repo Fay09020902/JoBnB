@@ -29,29 +29,32 @@ function SignupFormModal() {
       confirmPassword.length >= 6 &&
       password.length >= 6
     )
-    setDisabled(false);
+      setButtonDisabled(false);
   }, [email, username, firstName, lastName, password, confirmPassword])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      setErrors({});
-      return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password,
-        })
-      )
-        .then(closeModal)
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data && data.errors) {
-            setErrors(data.errors);
-          }
-        });
+    e.preventDefault();
+    setErrors({});
+    if (password !== confirmPassword) {
+      setErrors({ password: "Passwords must match" });
+      return;
+    }
+    const response = await dispatch(
+      sessionActions.signup({
+        email,
+        username,
+        firstName,
+        lastName,
+        password,
+      })
+    );
+    if (response.errors) {
+      setErrors(response.errors);
+    } else {
+      closeModal();
+      history.push("/");
+    }
     }
     return setErrors({
       confirmPassword: "Confirm Password field must be the same as the Password field"
