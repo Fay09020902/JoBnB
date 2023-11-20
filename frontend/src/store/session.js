@@ -54,7 +54,7 @@ export const signup = (user) => async (dispatch) => {
         const data = await response.json();
         dispatch(setUser(data.user));
         return response;
-    } 
+    }
 }
 
 export const logout = () => async (dispatch) => {
@@ -78,8 +78,10 @@ const sessionReducer = (state = initialState, action) => {
             newState.user = action.payload;
             return newState;
         case REMOVE_USER:
-            newState = {user: null}
-            return newState
+          console.log("current state: ", state)
+          newState = { ...state };
+          newState.user = null;
+          return newState
         default:
             return state;
     }

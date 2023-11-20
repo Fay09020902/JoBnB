@@ -72,6 +72,7 @@ function SignupFormModal() {
             required
           />
         </label>
+        {console.log("errors: ", errors)}
         {errors.email && <p className="error-message">{errors.email}</p>}
         <label>
           Username
