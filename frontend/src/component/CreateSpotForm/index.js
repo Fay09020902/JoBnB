@@ -51,20 +51,22 @@ function CreateSpotForm(){
         if (!state) err.state = "State is required";
         if (!lng) {
             err.lng = "Longitude is required";
-          } else {
-            const lngFloat = parseFloat(lng);
-            if (isNaN(lngFloat) || lngFloat < -180 || lngFloat > 180) {
-              err.lng = "Longitude must be a valid number between -180 and 180";
-            }
           }
+        //   else {
+        //     const lngFloat = parseFloat(lng);
+        //     if (isNaN(lngFloat) || lngFloat < -180 || lngFloat > 180) {
+        //       err.lng = "Longitude must be a valid number between -180 and 180";
+        //     }
+        //   }
           if (!lat) {
             err.lat = "Latitude is required";
-          } else {
-            const latFloat = parseFloat(lat);
-            if (isNaN(latFloat) || latFloat < -90 || latFloat > 90) {
-              err.lat = "Latitude must be a valid number between -90 and 90";
-            }
           }
+        //   else {
+        //     const latFloat = parseFloat(lat);
+        //     if (isNaN(latFloat) || latFloat < -90 || latFloat > 90) {
+        //       err.lat = "Latitude must be a valid number between -90 and 90";
+        //     }
+        //   }
         if (description && description.length < 30)
            err.description = "Description needs 30 or more characters";
         if (!description) err.description = "Description is required";

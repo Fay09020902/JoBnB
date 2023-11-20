@@ -5,7 +5,7 @@ import * as sessionActions from "../../store/session";
 import "./SignUpFormPage.css";
 
 function SignupFormModal() {
-  console.log("sign up form run")
+  //console.log("sign up form run")
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [email, setEmail] = useState("");
@@ -49,7 +49,7 @@ function SignupFormModal() {
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
-          console.log("error data:" , data)
+          //console.log("error data:" , data)
           if (data && data.errors) {
             setErrors(data.errors);
           }
@@ -74,7 +74,6 @@ function SignupFormModal() {
             required
           />
         </label>
-        {console.log("errors: ", errors)}
         {errors.email && <p className="error-message">{errors.email}</p>}
         <label>
           Username
