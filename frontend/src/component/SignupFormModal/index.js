@@ -18,23 +18,18 @@ function SignupFormModal() {
   const { closeModal } = useModal();
 
   useEffect(() => {
-    const isAnyFieldEmpty =
-    email === "" ||
-    username === "" ||
-    firstName === "" ||
-    lastName === "" ||
-    password === "" ||
-    confirmPassword === "";
-
-   if(isAnyFieldEmpty) {
-     setDisabled(true)
-   } else if (username.length < 4 && password.length < 6){
-      setDisabled(true)
-    } else if(password !== confirmPassword) {
-      setDisabled(true)
-    } else {
-      setDisabled(false)
-    }
+    if (
+      email &&
+      username &&
+      firstName &&
+      lastName &&
+      password &&
+      confirmPassword &&
+      username.length >= 4 &&
+      confirmPassword.length >= 6 &&
+      password.length >= 6
+    )
+    setDisabled(false);
   }, [email, username, firstName, lastName, password, confirmPassword])
 
   const handleSubmit = (e) => {
