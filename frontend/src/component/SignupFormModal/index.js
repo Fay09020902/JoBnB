@@ -18,45 +18,43 @@ function SignupFormModal() {
   const { closeModal } = useModal();
 
   useEffect(() => {
-    const isAnyFieldEmpty =
-    email === "" ||
-    username === "" ||
-    firstName === "" ||
-    lastName === "" ||
-    password === "" ||
-    confirmPassword === "";
-
-   if(isAnyFieldEmpty) {
-     setDisabled(true)
-   } else if (username.length < 4 && password.length < 6){
-      setDisabled(true)
-    } else if(password !== confirmPassword) {
-      setDisabled(true)
-    } else {
-      setDisabled(false)
-    }
+    if (
+      email &&
+      username &&
+      firstName &&
+      lastName &&
+      password &&
+      confirmPassword &&
+      username.length >= 4 &&
+      confirmPassword.length >= 6 &&
+      password.length >= 6
+    )
+      setButtonDisabled(false);
   }, [email, username, firstName, lastName, password, confirmPassword])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      setErrors({});
-      return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password,
-        })
-      )
-        .then(closeModal)
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data && data.errors) {
-            setErrors(data.errors);
-          }
-        });
+    e.preventDefault();
+    setErrors({});
+    if (password !== confirmPassword) {
+      setErrors({ password: "Passwords must match" });
+      return;
+    }
+    const response = await dispatch(
+      sessionActions.signup({
+        email,
+        username,
+        firstName,
+        lastName,
+        password,
+      })
+    );
+    if (response.errors) {
+      setErrors(response.errors);
+    } else {
+      closeModal();
+      history.push("/");
+    }
     }
     return setErrors({
       confirmPassword: "Confirm Password field must be the same as the Password field"
