@@ -42,7 +42,14 @@ function SpotDetail() {
     if(!isLoaded) {
     return <div>Unable to retrieve details. Please try again shortly.</div>
   }
-
+    const notPreviewImage = []
+    const previewImage = spot.SpotImages.find(imageObject => Object.values(imageObject)[2] === true);
+    spot.SpotImages.forEach(imageObject => {
+        if((Object.values(imageObject)[2]) === false) {
+            notPreviewImage.push(imageObject)
+        }
+    })
+    //console.log("notPreviewImage", notPreviewImage)
     return (
         <>
         {isLoaded && (
@@ -52,18 +59,18 @@ function SpotDetail() {
                     {`${spot.city}, ${spot.state}, ${spot.country}`}
                 </div>
                 <div className='spot-images'>
-                        {spot.SpotImages && spot.SpotImages[spot.SpotImages.length - 1]  && (
+                        {spot.SpotImages && previewImage.url && (
                                 <div className='large-image'>
                                     <img
                                         className='spot-detail-image'
-                                        alt={spot.SpotImages[spot.SpotImages.length - 1].url}
-                                        src={spot.SpotImages[spot.SpotImages.length - 1].url}
+                                        alt={previewImage.url}
+                                        src={previewImage.url}
                                     />
                                 </div>
                         )}
                     <div className='small-images'>
                         {spot.SpotImages &&
-                        spot.SpotImages.slice(0, -1).map((image) => (
+                        notPreviewImage.map((image) => (
                             <div className='spot-image-each-small' key={image.id}>
                             <img
                                 className='spot-detail-image-small'
