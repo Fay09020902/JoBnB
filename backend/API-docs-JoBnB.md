@@ -4,7 +4,7 @@
 
 ## Database Schema Design
 
-[database-schema]: ![Getting Started](schema.png)
+[database-schema]: ![Getting Started](<../frontend/src/images/schema.png>)
 
 ## API Documentation
 

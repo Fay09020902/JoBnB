@@ -43,7 +43,7 @@ function EditSpotForm(){
             } catch (error) {
                 const data = await error.json();
                 if (data && data.errors) {
-                    setErrors(data.errors);
+                    setErrors(data.errors); 
                 }
             }
         };
